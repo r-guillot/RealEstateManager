@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#255FDB</color>
+    <color name="white">#FFFF</color>
+    <color name="darkGrey">#242424</color>
+    <color name="royalBlue">#4169E1</color>
+    <color name="deepBlue">#255FDB</color>
+    <color name="dark">#000000</color>
+    <color name="lightGrey">#C0C0C0</color>
+    <color name="red">#CB2020</color>
+    <color name="lightBlue">#CEE7FF</color>
+    <color name="mediumBlue">#AFD7FF</color>
+    <color name="darkBlue">#0A41C1</color>
+</resources>

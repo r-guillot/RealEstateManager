@@ -9,7 +9,6 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityCoreBinding
 import com.openclassrooms.realestatemanager.room.RealEstateApplication
@@ -29,7 +28,7 @@ class CoreActivity : AppCompatActivity(), NavController.OnDestinationChangedList
 
         configureBinding()
         initNavigation()
-        getProperties()
+//        getProperties()
         navController.addOnDestinationChangedListener(this)
     }
 
@@ -67,9 +66,9 @@ class CoreActivity : AppCompatActivity(), NavController.OnDestinationChangedList
         }
     }
 
-    private fun getProperties() {
-        viewModel.allProperty.observe(this, Observer { properties ->
-            properties.let { Toast.makeText(this,"ok", Toast.LENGTH_SHORT).show() }
-        })
-    }
+//    private fun getProperties() {
+//        viewModel.allProperty.observe(this, Observer { properties ->
+//            properties.let { Toast.makeText(this,"ok", Toast.LENGTH_SHORT).show() }
+//        })
+//    }
 }

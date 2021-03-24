@@ -5,21 +5,45 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#5E35B1"
-    tools:context="MasterFragment">
+    tools:context=".propertylist.MasterFragment">
 
-    <TextView
-        android:id="@+id/master_text_view"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/property_recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/detail_fragment_container"
         app:layout_constraintHorizontal_weight="4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:gravity="center"
-        tools:text="Master fragment"
-        tools:textColor="@color/white"
-        tools:textSize="24sp" />
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_new_property"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_baseline_add_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/property_recyclerView" />
+
+<!--    <TextView-->
+<!--        android:id="@+id/master_text_view"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/detail_fragment_container"-->
+<!--        app:layout_constraintHorizontal_weight="4"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        tools:gravity="center"-->
+<!--        tools:text="Master fragment"-->
+<!--        tools:textColor="@color/white"-->
+<!--        tools:textSize="24sp" />-->
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/detail_fragment_container"
@@ -28,7 +52,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="7"
-        app:layout_constraintStart_toEndOf="@id/master_text_view"
+        app:layout_constraintStart_toEndOf="@id/property_recyclerView"
         app:layout_constraintTop_toTopOf="parent"
         tools:background="#D81B60"
         tools:layout="@layout/fragment_detail" />

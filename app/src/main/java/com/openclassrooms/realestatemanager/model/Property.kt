@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverter
 
 @Entity(tableName = "property_items")
 data class Property(
@@ -15,10 +16,11 @@ data class Property(
         @ColumnInfo(name = "property_bedroom") var bedroom: Int?,
         @ColumnInfo(name = "property_bathroom") var bathroom: Int?,
         @ColumnInfo(name = "property_description") var description: String?,
-        @ColumnInfo(name = "property_photo") var photo: MutableList<Uri?>?,
+        @ColumnInfo(name = "property_photo") var photo: MutableList<Uri>?,
+        @ColumnInfo(name = "property_video") var video: Uri?,
         @ColumnInfo(name = "property_address") var address: String?,
-        @ColumnInfo(name = "property_asset") var asset: MutableList<CharSequence?>?,
-        @ColumnInfo(name = "property_poi") var pointOfInterest: MutableList<CharSequence?>?,
+        @ColumnInfo(name = "property_asset") var asset: MutableList<String>?,
+        @ColumnInfo(name = "property_poi") var pointOfInterest: MutableList<String>?,
         @ColumnInfo(name = "property_sold") var sold: Boolean,
         @ColumnInfo(name = "property_sold_date") var soldDate: String?,
         @ColumnInfo(name = "property_arrival_date") var arrivalDate: String,

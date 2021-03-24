@@ -13,7 +13,6 @@
         android:layout_height="200dp"
         android:layout_margin="10dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/maison"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp" />
 
@@ -41,7 +40,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10sp"
                 android:layout_marginTop="10sp"
-                android:text="Appartement"
                 android:textAllCaps="true"
                 android:textColor="@color/royalBlue"
 
@@ -58,10 +56,7 @@
                 android:layout_marginBottom="10dp"
                 android:maxLines="2"
 
-                android:text="2promenade louis lachenal, 74000 Annecy"
                 android:textColor="@color/dark"
-
-
                 android:textSize="14sp"
 
                 app:layout_constraintBottom_toTopOf="@+id/textView_number_rooms"
@@ -76,7 +71,6 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginBottom="8dp"
 
-                android:text="4 rooms"
                 android:textColor="@color/dark"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -88,11 +82,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
-                android:text="58 m²"
                 android:textColor="@color/dark"
                 android:textSize="15sp"
-
                 android:textStyle="bold"
+
                 app:layout_constraintBottom_toBottomOf="@+id/textView_number_rooms"
                 app:layout_constraintStart_toEndOf="@+id/textView_number_rooms"
                 app:layout_constraintTop_toTopOf="@+id/textView_number_rooms" />
@@ -101,7 +94,6 @@
                 android:id="@+id/textView_property_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="300 000$"
                 android:textColor="@color/red"
                 android:textSize="23sp"
                 android:textStyle="bold"
@@ -118,10 +110,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-
-                android:text="mis en ligne le 14/02/2021"
                 android:textColor="@color/lightGrey"
                 android:textSize="12sp"
+
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView_property_place" />
 

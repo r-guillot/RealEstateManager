@@ -1,3 +1,46 @@
 <resources>
     <string name="app_name">Real Estate Manager</string>
+
+    //General
+    <string name="yes">Yes !</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+
+    //NewProperty
+    <string name="address">Property Address</string>
+    <string name="address_hint">address</string>
+    <string name="surface">Surface and Rooms</string>
+    <string name="m2">m²</string>
+    <string name="price">Price</string>
+    <string name="description">Property Description</string>
+    <string name="description_hint">description</string>
+    <string name="type">Property Type</string>
+    <string name="house">House</string>
+    <string name="condo">Condo</string>
+    <string name="land">Land</string>
+    <string name="asset">Asset of the Property</string>
+    <string name="cellar">Cellar</string>
+    <string name="parking">Parking</string>
+    <string name="garage">Garage</string>
+    <string name="garden">Garden</string>
+    <string name="view">View</string>
+    <string name="balcony">Balcony/Terrace</string>
+    <string name="pool">Swimming Pool</string>
+    <string name="elevator">Elevator</string>
+    <string name="interest">Point of Interest</string>
+    <string name="school">School</string>
+    <string name="bar">Bar</string>
+    <string name="commerce">Local Commerce</string>
+    <string name="park">Park</string>
+    <string name="transport">Public Transport</string>
+    <string name="culture">Cultural Places</string>
+    <string name="add_photo_title">Adding Photo</string>
+    <string name="from_gallery">Select photos from gallery</string>
+    <string name="shoot_photo">Shoot a photo</string>
+    <string name="photo_message">With which method do you want to add photos</string>
+    <string name="add_photo">ADD PHOTO</string>
+    <string name="add_video">ADD VIDEO</string>
+    <string name="validation_button">VALIDATE</string>
 </resources>

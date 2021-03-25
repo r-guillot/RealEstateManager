@@ -1,9 +1,13 @@
 package com.openclassrooms.realestatemanager.room
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Base64.encodeToString
 import androidx.core.net.toUri
-import androidx.lifecycle.Transformations.map
 import androidx.room.TypeConverter
+import java.io.ByteArrayOutputStream
+import java.util.*
 
 private const val SEPARATOR = ","
 
@@ -35,4 +39,16 @@ class Converters {
     @TypeConverter
     fun stringToString(string: String?): MutableList<String>? =
             string?.split(SEPARATOR)?.map { it.toString() }?.toMutableList()
+
+
+    @TypeConverter
+    fun fromBitmap(bmp: MutableList<Bitmap>?): ByteArray? {
+        val outputStream = ByteArrayOutputStream()
+        return bmp?.map {it.compress(Bitmap.CompressFormat.PNG, 100, outputStream) }?.let { outputStream.toByteArray() }
+    }
+
+    @TypeConverter
+    fun toBitmap(bytes: ByteArray?): MutableList<Bitmap> {
+        return bytes?.map { BitmapFactory.decodeByteArray(bytes, 0, bytes.size) } as MutableList<Bitmap>
+    }
 }

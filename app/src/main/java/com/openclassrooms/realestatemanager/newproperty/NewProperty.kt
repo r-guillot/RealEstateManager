@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.InputType
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.EditText
@@ -43,7 +44,8 @@ class NewProperty : AppCompatActivity() {
     private var typeChoice: CharSequence? = null
     private var assetList = mutableListOf<String>()
     private var interestList = mutableListOf<String>()
-    private var photoList = mutableListOf<Uri>()
+    private var photoListUri = mutableListOf<Uri>()
+    private var photoListBitmap = mutableListOf<Bitmap>()
     private var videoUri: Uri? = null
     var imageFilePath: String? = null
     private lateinit var photoURI: Uri
@@ -57,7 +59,7 @@ class NewProperty : AppCompatActivity() {
 
         configureBinding()
         getChipType()
-        getChipAsset()
+//        getChipAsset()
         getChipInterest()
         getOrTakePhoto()
         getVideo()
@@ -80,43 +82,55 @@ class NewProperty : AppCompatActivity() {
     private fun getChipAsset() {
         val ids = binding.chipGroupAsset.checkedChipIds
 
-        binding.chipGroupAsset.forEach { child ->
-            (child as? Chip)?.setOnCheckedChangeListener { _, _ ->
-                ids.forEach { id ->
-                    Log.d(TAG, "getChipAsset: $id")
-                    assetList.add(binding.chipGroupAsset.findViewById<Chip>(id).text.toString())
+        for (id in ids) {
+            val chip: Chip = binding.chipGroupAsset.findViewById(id)
+            assetList.add(chip.text.toString())
                     Toast.makeText(this, assetList.toString(), Toast.LENGTH_SHORT).show()
-                }
-
-                val text = if (assetList.isNotEmpty()) {
-                    assetList.joinToString(", ")
-                } else {
-                    "No Asset"
-                }
-
-                Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-            }
         }
+
+//        binding.chipGroupAsset.forEach { child ->
+//            (child as? Chip)?.setOnCheckedChangeListener { chipGroup, checkedId ->
+//                ids.forEach { id ->
+//                    Log.d(TAG, "getChipAsset: $id")
+//                    assetList.add(chipGroup.findViewById<Chip>(id).text.toString())
+//                    Toast.makeText(this, assetList.toString(), Toast.LENGTH_SHORT).show()
+//                }
+//
+//                val text = if (assetList.isNotEmpty()) {
+//                    assetList.joinToString(", ")
+//                } else {
+//                    "No Asset"
+//                }
+//
+//                Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+//            }
+//        }
     }
 
     private fun getChipInterest() {
         val ids = binding.chipGroupInterest.checkedChipIds
 
-        binding.chipGroupInterest.forEach { child ->
-            (child as? Chip)?.setOnCheckedChangeListener { _, _ ->
-                ids.forEach { id ->
-                    interestList.add(binding.chipGroupInterest.findViewById<Chip>(id).text.toString())
-                }
-
-                val text = if (interestList.isNotEmpty()) {
-                    interestList.joinToString(", ")
-                } else {
-                    "No Asset"
-                }
-
-                Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-            }
+        for (id in ids) {
+            val chip: Chip = binding.chipGroupInterest.findViewById(id)
+            interestList.add(chip.text.toString())
+            Toast.makeText(this, interestList.toString(), Toast.LENGTH_SHORT).show()
         }
+
+//        binding.chipGroupInterest.forEach { child ->
+//            (child as? Chip)?.setOnCheckedChangeListener { _, _ ->
+//                ids.forEach { id ->
+//                    interestList.add(binding.chipGroupInterest.findViewById<Chip>(id).text.toString())
+//                }
+//
+//                val text = if (interestList.isNotEmpty()) {
+//                    interestList.joinToString(", ")
+//                } else {
+//                    "No Asset"
+//                }
+//
+//                Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+//            }
+//        }
     }
 
     private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -125,16 +139,25 @@ class NewProperty : AppCompatActivity() {
             if (clipData != null) {
                 for (i in 0 until (clipData.itemCount)) {
                     val imageUri: Uri = clipData.getItemAt(i).uri
-                    photoList.add(imageUri)
+                    photoListUri.add(imageUri)
+
+//                    val `is`: InputStream? = contentResolver.openInputStream(imageUri)
+//                    val bitmap = BitmapFactory.decodeStream(`is`)
+//                    photoListBitmap.add(bitmap)
                 }
             } else {
                 val uri: Uri? = result.data?.data
-                uri?.let { photoList.add(it) }
+                uri?.let { photoListUri.add(it)
+//                    val `is`: InputStream? = contentResolver.openInputStream(uri)
+//                    val bitmap = BitmapFactory.decodeStream(`is`)
+//                    photoListBitmap.add(bitmap)
+                }
             }
-            Log.d(TAG, "photoList result $photoList")
+            Log.d(TAG, "photoList result $photoListUri + bitmap $photoListBitmap")
             displaySelectedPhotoInViewPager()
         }
     }
+
 
     private fun getPhotosFromGallery() {
         val intent = Intent()
@@ -146,10 +169,10 @@ class NewProperty : AppCompatActivity() {
     }
 
     private fun displaySelectedPhotoInViewPager() {
-        Log.d(TAG, "photoList display $photoList")
-        if (photoList.size > 0) {
+        Log.d(TAG, "photoList display $photoListUri")
+        if (photoListUri.size > 0) {
             binding.viewPager.visibility = View.VISIBLE
-            val adapter = ViewPagerAdapter(photoList, this)
+            val adapter = ViewPagerAdapter(photoListUri, this)
             binding.viewPager.adapter = adapter
         }
     }
@@ -157,9 +180,13 @@ class NewProperty : AppCompatActivity() {
     private var resultCapturePhoto = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
 
-            photoList.add(photoURI)
+            photoListUri.add(photoURI)
+
+//            val `is`: InputStream? = contentResolver.openInputStream(photoURI)
+//            val bitmap = BitmapFactory.decodeStream(`is`)
+//            photoListBitmap.add(bitmap)
             Log.d(TAG, "uri: $photoURI")
-            Log.d(TAG, "photolist after capture: $photoList ")
+            Log.d(TAG, "photolist after capture: $photoListUri ")
             displaySelectedPhotoInViewPager()
         }
     }
@@ -291,26 +318,33 @@ class NewProperty : AppCompatActivity() {
     }
 
     private fun createNewProperty() {
-
+        Log.d(TAG, "createNewProperty: ")
+        getChipAsset()
         val currentDate = Utils.getTodayDate()
 
         val id = (System.currentTimeMillis() / 1000).toInt()
         val address = binding.editTextAddress.text.toString()
-        val surface = binding.editTextSurface.text.toString().toInt()
-        val rooms = binding.editTextRoom.text.toString().toInt()
-        val bedrooms = binding.editTextBedroom.text.toString().toInt()
-        val bathrooms = binding.editTextBathroom.text.toString().toInt()
-        val price = binding.editTextPrice.text.toString().toInt()
+        val surface = checkIfEmpty(binding.editTextSurface.text.toString())
+        val rooms = checkIfEmpty(binding.editTextRoom.text.toString())
+        val bedrooms = checkIfEmpty(binding.editTextBedroom.text.toString())
+        val bathrooms = checkIfEmpty(binding.editTextBathroom.text.toString())
+        val price = checkIfEmpty(binding.editTextPrice.text.toString())
         val description = binding.editTextDescription.text.toString()
         val asset = assetList
         val interest = interestList
         val type = typeChoice.toString()
-        val photo = photoList
+        val photo = photoListBitmap
         val video = videoUri
 
         val property = Property(id, type, price, surface, rooms, bedrooms, bathrooms, description,
                 photo, video, address, asset, interest, sold = false, soldDate = null, arrivalDate = currentDate, agent)
         viewModel.insertNewProperty(property)
         startActivity(Intent(this, CoreActivity::class.java))
+    }
+
+    private fun checkIfEmpty(string: String): Int? {
+        return if(string.isEmpty()) {
+            null
+        } else string.toInt()
     }
 }

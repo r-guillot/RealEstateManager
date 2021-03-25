@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.propertylist
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -47,7 +48,7 @@ class MasterFragment : Fragment() {
         propertyRecycleView = binding.propertyRecyclerView
         propertyRecycleView.layoutManager = LinearLayoutManager(context)
 
-        getProperties()
+//        getProperties()
 
         return binding.root
     }
@@ -114,9 +115,9 @@ class MasterFragment : Fragment() {
             Log.d("RV", "bind: this.property " + this.property)
             Log.d("RV", "bind: property $property")
 
-            val imageUri: Uri? = this.property.photo?.get(0)
+            val imageUri: Bitmap? = this.property.photo?.get(0)
 
-            imageUri?.let { binding.imageViewProperty.setImageURI(it) }
+            imageUri?.let { binding.imageViewProperty.setImageBitmap(it) }
             binding.textViewNumberRooms.text = this.property.room.toString()
             binding.textViewPropertyPlace.text = this.property.address
             binding.textViewPropertyPrice.text = this.property.price.toString()

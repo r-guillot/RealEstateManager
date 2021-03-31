@@ -15,4 +15,9 @@ class PropertyRepository(private val propertyDao: PropertyDao) {
     suspend fun insertProperty(property: Property) {
         propertyDao.insertProperty(property)
     }
+
+
+    fun getProperty(int: Int): Property {
+       return propertyDao.findById(int)
+    }
 }

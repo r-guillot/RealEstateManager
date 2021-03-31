@@ -43,4 +43,6 @@
     <string name="add_photo">ADD PHOTO</string>
     <string name="add_video">ADD VIDEO</string>
     <string name="validation_button">VALIDATE</string>
+    <string name="title_property_list">Properties</string>
+    <string name="title_property_detail">Property Detail</string>
 </resources>

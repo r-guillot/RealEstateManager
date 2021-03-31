@@ -16,7 +16,7 @@ data class Property(
         @ColumnInfo(name = "property_bedroom") var bedroom: Int?,
         @ColumnInfo(name = "property_bathroom") var bathroom: Int?,
         @ColumnInfo(name = "property_description") var description: String?,
-        @ColumnInfo(name = "property_photo") var photo: MutableList<Bitmap>?,
+        @ColumnInfo(name = "property_photo") var photo: MutableList<Uri>?,
         @ColumnInfo(name = "property_video") var video: Uri?,
         @ColumnInfo(name = "property_address") var address: String?,
         @ColumnInfo(name = "property_asset") var asset: MutableList<String>?,

@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#5E35B1"
-    tools:context=".propertylist.MasterFragment">
+    android:background="#5E35B1">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/property_recyclerView"
@@ -13,7 +12,7 @@
         android:layout_height="0dp"
 
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/detail_fragment_container"
+        app:layout_constraintEnd_toStartOf="@id/item_detail_container"
         app:layout_constraintHorizontal_weight="4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -32,8 +31,8 @@
         app:layout_constraintEnd_toEndOf="@+id/property_recyclerView" />
 
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/detail_fragment_container"
+    <FrameLayout
+        android:id="@+id/item_detail_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -42,7 +41,7 @@
         app:layout_constraintStart_toEndOf="@id/property_recyclerView"
         app:layout_constraintTop_toTopOf="parent"
         tools:background="#D81B60"
-        tools:layout="@layout/fragment_detail" />
+        tools:layout="@layout/property_detail" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

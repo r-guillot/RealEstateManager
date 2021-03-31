@@ -12,6 +12,9 @@ interface PropertyDao {
     @Query("SELECT * FROM property_items WHERE property_type LIKE :type")
     fun findByType(type: String): Flow<List<Property>>
 
+    @Query("SELECT * FROM property_items WHERE id LIKE :id")
+    fun findById(id: Int): Property
+
     @Insert
     suspend fun insertProperty(vararg property: Property)
 

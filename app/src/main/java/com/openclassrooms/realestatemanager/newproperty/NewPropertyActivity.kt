@@ -7,11 +7,11 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.InputType
-import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.EditText
@@ -21,13 +21,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import androidx.core.view.forEach
 import com.google.android.material.chip.Chip
 import com.openclassrooms.realestatemanager.BuildConfig
+import com.openclassrooms.realestatemanager.PropertyListActivity
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.Utils
 import com.openclassrooms.realestatemanager.databinding.ActivityNewPropertyBinding
-import com.openclassrooms.realestatemanager.main.CoreActivity
 import com.openclassrooms.realestatemanager.model.Property
 import com.openclassrooms.realestatemanager.room.RealEstateApplication
 import java.io.File
@@ -36,7 +35,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class NewProperty : AppCompatActivity() {
+class NewPropertyActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNewPropertyBinding
     private val viewModel: NewPropertyViewModel by viewModels {
         NewPropertyViewModelFactory((application as RealEstateApplication).propertyRepository)
@@ -45,22 +44,18 @@ class NewProperty : AppCompatActivity() {
     private var assetList = mutableListOf<String>()
     private var interestList = mutableListOf<String>()
     private var photoListUri = mutableListOf<Uri>()
-    private var photoListBitmap = mutableListOf<Bitmap>()
     private var videoUri: Uri? = null
     var imageFilePath: String? = null
     private lateinit var photoURI: Uri
     private lateinit var agent: String
 
-    private val TAG = NewProperty::class.qualifiedName
+    private val TAG = NewPropertyActivity::class.qualifiedName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_property)
 
         configureBinding()
         getChipType()
-//        getChipAsset()
-        getChipInterest()
         getOrTakePhoto()
         getVideo()
         validation()
@@ -72,6 +67,8 @@ class NewProperty : AppCompatActivity() {
         setContentView(view)
     }
 
+    //getChipType(), getChipAsset() et getChipInterest() get the type, the interests and the assets
+    // which selected by the agent for the creation of the property
     private fun getChipType() {
         binding.chipGroupType.setOnCheckedChangeListener { chipGroup, checkedId ->
             typeChoice = chipGroup.findViewById<Chip>(checkedId)?.text
@@ -80,80 +77,42 @@ class NewProperty : AppCompatActivity() {
     }
 
     private fun getChipAsset() {
-        val ids = binding.chipGroupAsset.checkedChipIds
-
-        for (id in ids) {
+        for (id in binding.chipGroupAsset.checkedChipIds) {
             val chip: Chip = binding.chipGroupAsset.findViewById(id)
             assetList.add(chip.text.toString())
-                    Toast.makeText(this, assetList.toString(), Toast.LENGTH_SHORT).show()
         }
-
-//        binding.chipGroupAsset.forEach { child ->
-//            (child as? Chip)?.setOnCheckedChangeListener { chipGroup, checkedId ->
-//                ids.forEach { id ->
-//                    Log.d(TAG, "getChipAsset: $id")
-//                    assetList.add(chipGroup.findViewById<Chip>(id).text.toString())
-//                    Toast.makeText(this, assetList.toString(), Toast.LENGTH_SHORT).show()
-//                }
-//
-//                val text = if (assetList.isNotEmpty()) {
-//                    assetList.joinToString(", ")
-//                } else {
-//                    "No Asset"
-//                }
-//
-//                Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-//            }
-//        }
     }
 
     private fun getChipInterest() {
-        val ids = binding.chipGroupInterest.checkedChipIds
-
-        for (id in ids) {
+        for (id in binding.chipGroupInterest.checkedChipIds) {
             val chip: Chip = binding.chipGroupInterest.findViewById(id)
             interestList.add(chip.text.toString())
-            Toast.makeText(this, interestList.toString(), Toast.LENGTH_SHORT).show()
         }
-
-//        binding.chipGroupInterest.forEach { child ->
-//            (child as? Chip)?.setOnCheckedChangeListener { _, _ ->
-//                ids.forEach { id ->
-//                    interestList.add(binding.chipGroupInterest.findViewById<Chip>(id).text.toString())
-//                }
-//
-//                val text = if (interestList.isNotEmpty()) {
-//                    interestList.joinToString(", ")
-//                } else {
-//                    "No Asset"
-//                }
-//
-//                Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-//            }
-//        }
     }
 
+    //ActivityResult after getting pictures in gallery(one or multiple) and display them in ViewPager
     private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val clipData: ClipData? = result.data?.clipData
             if (clipData != null) {
                 for (i in 0 until (clipData.itemCount)) {
                     val imageUri: Uri = clipData.getItemAt(i).uri
-                    photoListUri.add(imageUri)
-
-//                    val `is`: InputStream? = contentResolver.openInputStream(imageUri)
-//                    val bitmap = BitmapFactory.decodeStream(`is`)
-//                    photoListBitmap.add(bitmap)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        //add permission for long time use
+                        contentResolver.takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                        photoListUri.add(imageUri)
+                    }
                 }
             } else {
                 val uri: Uri? = result.data?.data
-                uri?.let { photoListUri.add(it)
-//                    val `is`: InputStream? = contentResolver.openInputStream(uri)
-//                    val bitmap = BitmapFactory.decodeStream(`is`)
-//                    photoListBitmap.add(bitmap)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    if (uri != null) {
+                        //add permission for long time use
+                        contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                        photoListUri.add(uri)
+                    }
                 }
             }
-            Log.d(TAG, "photoList result $photoListUri + bitmap $photoListBitmap")
             displaySelectedPhotoInViewPager()
         }
     }
@@ -163,7 +122,9 @@ class NewProperty : AppCompatActivity() {
         val intent = Intent()
         intent.type = "image/*"
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        intent.action = Intent.ACTION_GET_CONTENT
+        intent.action = Intent.ACTION_OPEN_DOCUMENT
+        intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         intent.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         resultLauncher.launch(intent)
     }
@@ -177,16 +138,11 @@ class NewProperty : AppCompatActivity() {
         }
     }
 
+    //ActivityResult after shoot a photo, add it in photoListUri and display it in ViewPager
     private var resultCapturePhoto = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
 
             photoListUri.add(photoURI)
-
-//            val `is`: InputStream? = contentResolver.openInputStream(photoURI)
-//            val bitmap = BitmapFactory.decodeStream(`is`)
-//            photoListBitmap.add(bitmap)
-            Log.d(TAG, "uri: $photoURI")
-            Log.d(TAG, "photolist after capture: $photoListUri ")
             displaySelectedPhotoInViewPager()
         }
     }
@@ -210,6 +166,7 @@ class NewProperty : AppCompatActivity() {
         }
     }
 
+    //Create image after taking a photo
     @Throws(IOException::class)
     private fun createImageFile(): File? {
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss",
@@ -226,7 +183,7 @@ class NewProperty : AppCompatActivity() {
         return image
     }
 
-
+    //AlertDialog for choosing the way to add the photo
     private fun getOrTakePhoto() {
         binding.buttonAddPhoto.setOnClickListener {
             AlertDialog.Builder(this).apply {
@@ -247,6 +204,7 @@ class NewProperty : AppCompatActivity() {
         }
     }
 
+    ////ActivityResult after get a video
     private var resultLauncherVideo = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             if (result.data != null) {
@@ -259,6 +217,7 @@ class NewProperty : AppCompatActivity() {
         }
     }
 
+    //Create a thumbnail of the recovered video and display it under the ViewPager
     private fun getThumbVideo(context: Context?, videoUri: Uri?) {
         var bitmap: Bitmap? = null
         var mediaMetadataRetriever: MediaMetadataRetriever? = null
@@ -278,7 +237,7 @@ class NewProperty : AppCompatActivity() {
     private fun getVideoFromGallery() {
         val intent = Intent()
         intent.type = "video/*"
-        intent.action = Intent.ACTION_PICK
+        intent.action = Intent.ACTION_OPEN_DOCUMENT
         resultLauncherVideo.launch(intent)
     }
 
@@ -288,7 +247,8 @@ class NewProperty : AppCompatActivity() {
         }
     }
 
-
+    //AlertDialog after button pressed, we ask for the name of the agent,
+    // if he don't give it, he can't create a new Property
     private fun validation() {
         binding.buttonValidate.setOnClickListener {
             val input = EditText(this)
@@ -299,11 +259,11 @@ class NewProperty : AppCompatActivity() {
                 setTitle("Kotlin message")
                 setView(input)
                 this.setPositiveButton("Yes !") { dialog, _ ->
-                    val text = input.text?.toString()
-                    text?.let {
-                        agent = it
+                    val text = input.text.toString()
+                    if (text.isNotEmpty()) {
+                        agent = text
                         createNewProperty()
-                    } ?: kotlin.run {
+                    } else {
                         Toast.makeText(context, "You have to give your name", Toast.LENGTH_LONG).show()
                         dialog.dismiss()
                     }
@@ -317,9 +277,10 @@ class NewProperty : AppCompatActivity() {
         }
     }
 
+    //Create a new Property
     private fun createNewProperty() {
-        Log.d(TAG, "createNewProperty: ")
         getChipAsset()
+        getChipInterest()
         val currentDate = Utils.getTodayDate()
 
         val id = (System.currentTimeMillis() / 1000).toInt()
@@ -333,17 +294,18 @@ class NewProperty : AppCompatActivity() {
         val asset = assetList
         val interest = interestList
         val type = typeChoice.toString()
-        val photo = photoListBitmap
+        val photo = photoListUri
         val video = videoUri
 
         val property = Property(id, type, price, surface, rooms, bedrooms, bathrooms, description,
                 photo, video, address, asset, interest, sold = false, soldDate = null, arrivalDate = currentDate, agent)
         viewModel.insertNewProperty(property)
-        startActivity(Intent(this, CoreActivity::class.java))
+        startActivity(Intent(this, PropertyListActivity::class.java))
     }
 
+    //Use for check if the editText with the int is empty or not, return null if is it
     private fun checkIfEmpty(string: String): Int? {
-        return if(string.isEmpty()) {
+        return if (string.isEmpty()) {
             null
         } else string.toInt()
     }

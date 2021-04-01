@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".PropertyListActivity"
+            android:name=".propertylist.PropertyListActivity"
             android:label="@string/title_property_list"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -27,30 +27,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PropertyDetailActivity"
+            android:name=".detail.PropertyDetailActivity"
             android:label="@string/title_property_detail"
-            android:parentActivityName=".PropertyListActivity"
+            android:parentActivityName=".propertylist.PropertyListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.openclassrooms.realestatemanager.PropertyListActivity" />
-        </activity>
-        <activity android:name=".main.CoreActivity">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--&lt;!&ndash;                <category android:name="android.intent.category.LAUNCHER" />&ndash;&gt;-->
-<!--            </intent-filter>-->
+                android:value="com.openclassrooms.realestatemanager.propertylist.PropertyListActivity" />
         </activity>
         <activity android:name=".newproperty.NewPropertyActivity" />
-        <activity android:name=".PropertyDetailsActivity" />
-        <activity android:name=".main.PropertyListActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"

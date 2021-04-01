@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
 import com.openclassrooms.realestatemanager.databinding.ItemViewpagerBinding
 
-class ViewPagerAdapter(var list: MutableList<Uri>, var context: Context) : PagerAdapter() {
+class ViewPagerAdapter(var list: MutableList<Uri>, var context: Context, var width: Float) : PagerAdapter() {
 
     override fun getCount(): Int {
         return list.size
@@ -28,7 +28,7 @@ class ViewPagerAdapter(var list: MutableList<Uri>, var context: Context) : Pager
     }
 
     override fun getPageWidth(position: Int): Float {
-        return 0.5f
+        return width
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {

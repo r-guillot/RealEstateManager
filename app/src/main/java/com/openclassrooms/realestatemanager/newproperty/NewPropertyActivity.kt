@@ -23,7 +23,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.google.android.material.chip.Chip
 import com.openclassrooms.realestatemanager.BuildConfig
-import com.openclassrooms.realestatemanager.PropertyListActivity
+import com.openclassrooms.realestatemanager.propertylist.PropertyListActivity
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.Utils
 import com.openclassrooms.realestatemanager.databinding.ActivityNewPropertyBinding
@@ -133,7 +133,7 @@ class NewPropertyActivity : AppCompatActivity() {
         Log.d(TAG, "photoList display $photoListUri")
         if (photoListUri.size > 0) {
             binding.viewPager.visibility = View.VISIBLE
-            val adapter = ViewPagerAdapter(photoListUri, this)
+            val adapter = ViewPagerAdapter(photoListUri, this, 0.5f)
             binding.viewPager.adapter = adapter
         }
     }

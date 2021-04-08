@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Base64.encodeToString
 import androidx.core.net.toUri
 import androidx.room.TypeConverter
+import com.google.android.gms.maps.model.LatLng
 import java.io.ByteArrayOutputStream
 import java.util.*
 

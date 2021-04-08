@@ -1,13 +1,23 @@
 package com.openclassrooms.realestatemanager.detail
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.MediaController
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.chip.Chip
+import com.openclassrooms.realestatemanager.OnMapAndViewReadyListener
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.PropertyDetailBinding
 import com.openclassrooms.realestatemanager.main.PropertyListViewModel
 import com.openclassrooms.realestatemanager.main.PropertyListViewModelFactory
@@ -15,21 +25,28 @@ import com.openclassrooms.realestatemanager.model.Property
 import com.openclassrooms.realestatemanager.newproperty.ViewPagerAdapter
 import com.openclassrooms.realestatemanager.room.RealEstateApplication
 
+
 /**
  * A fragment representing a single Property detail screen.
  * This fragment is either contained in a [PropertyListActivity]
  * in two-pane mode (on tablets) or a [PropertyDetailActivity]
  * on handsets.
  */
-class PropertyDetailFragment : Fragment() {
+class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLayoutAndMapReadyListener {
     private val viewModel: PropertyListViewModel by viewModels {
         PropertyListViewModelFactory((activity?.application as RealEstateApplication).propertyRepository)
     }
 
     private lateinit var binding: PropertyDetailBinding
+    private lateinit var map: GoogleMap
+    private lateinit var videoUri: Uri
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = PropertyDetailBinding.inflate(layoutInflater)
+
+        binding.viewPager.requestFocus()
+        val mapFragment = childFragmentManager.findFragmentById(R.id.googleMap) as SupportMapFragment
+        OnMapAndViewReadyListener(mapFragment, this)
         return binding.root
     }
 
@@ -57,16 +74,26 @@ class PropertyDetailFragment : Fragment() {
     private fun updateUi(property: Property) {
         Log.d("TAG", "onViewCreated: $property")
         binding.apply {
-            textViewPropertyType.text = property.type
-            textViewPropertyPlace.text = property.address
-            textViewPropertySurface.text = property.surface.toString()
-            textViewNumberRooms.text = property.room.toString()
-            textViewNumberBedroom.text = property.bedroom.toString()
-            textViewNumberBathroom.text = property.bathroom.toString()
-            textViewPropertyPrice.text = property.price.toString()
-            textViewDescription.text = property.description
+            textViewPropertyType.text = checkIfNull(property.type.toString(), "")
+            textViewPropertyPlace.text = checkIfNull(property.address.toString(), "")
+            textViewPropertySurface.text = checkIfNull(property.surface.toString(), " m²")
+            textViewNumberRooms.text = checkIfNull(property.room.toString(), " rooms")
+            textViewNumberBedroom.text = checkIfNull(property.bedroom.toString(), " bedrooms")
+            textViewNumberBathroom.text = checkIfNull(property.bathroom.toString(), " bathrooms")
+            textViewPropertyPrice.text = checkIfNull(property.price.toString(), " $")
+            textViewDescription.text = checkIfNull(property.description.toString(), "")
             textViewPropertyOnlineDate.text = property.arrivalDate
             property.photo?.let { displaySelectedPhotoInViewPager(property) }
+            property.asset?.let { addAsset(it) }
+            property.pointOfInterest?.let { addInterest(it) }
+
+            showPropertyPosition(property)
+            Log.d("FS", "updateUi: ${property.video}")
+
+            if (property.video != null) {
+                videoUri = property.video!!
+            }
+            displayVideo(videoUri)
         }
     }
 
@@ -75,6 +102,60 @@ class PropertyDetailFragment : Fragment() {
             val adapter = activity?.let { ViewPagerAdapter(property.photo!!, it.baseContext, 1.0f) }
             binding.viewPager.adapter = adapter
         }
+    }
+
+    private fun checkIfNull(info: String, unit: String): String {
+        return if (info.contains("null")) {
+            "no info"
+        } else {
+            info + unit
+        }
+    }
+
+    private fun addAsset(assetList: MutableList<String>) {
+        val chipGroup = binding.chipGroupAsset
+        for (i in 0 until assetList.size) {
+            val chip = Chip(chipGroup.context)
+            chip.text = assetList[i]
+            chipGroup.addView(chip)
+        }
+    }
+
+    private fun addInterest(interestList: MutableList<String>) {
+        val chipGroup = binding.chipGroupInterest
+        for (i in 0 until interestList.size) {
+            val chip = Chip(chipGroup.context)
+            chip.text = interestList[i]
+            chipGroup.addView(chip)
+        }
+    }
+
+    private fun showPropertyPosition(property: Property) {
+        if (!::map.isInitialized) return
+
+        val propertyPosition = LatLng(property.propertyLat, property.propertyLong)
+        // Center camera on Adelaide marker
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(propertyPosition, 15f))
+        map.addMarker(
+                MarkerOptions()
+                        .position(propertyPosition)
+                        .title(property.address)
+        )
+    }
+
+    override fun onMapReady(googleMap: GoogleMap?) {
+        // return early if the map was not initialised properly
+        map = googleMap ?: return
+    }
+
+    private fun displayVideo(videoUri: Uri) {
+        val videoView = binding.videoView
+        val mediaController = MediaController(context)
+        mediaController.setAnchorView(videoView)
+        videoView.visibility = View.VISIBLE
+        videoView.setMediaController(mediaController)
+        videoView.setVideoURI(videoUri)
+        videoView.seekTo(1)
     }
 
     companion object {

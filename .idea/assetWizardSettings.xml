@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/D:/Documents/Logiciels/Android%20Studio/plugins/android/lib/android.jar!/images/material/icons/materialicons/add/baseline_add_24.xml" />
+                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/account_balance/baseline_account_balance_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,9 +28,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="255fdb" />
-                            <entry key="outputName" value="ic_landscape" />
+                            <entry key="outputName" value="ic_baseline_bank_24" />
                             <entry key="sourceFile" value="D:\Bureau\landscape.svg" />
                           </map>
                         </option>

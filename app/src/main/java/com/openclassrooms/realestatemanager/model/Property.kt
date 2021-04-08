@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.android.gms.maps.model.LatLng
 
 @Entity(tableName = "property_items")
 data class Property(
@@ -24,5 +25,8 @@ data class Property(
         @ColumnInfo(name = "property_sold") var sold: Boolean,
         @ColumnInfo(name = "property_sold_date") var soldDate: String?,
         @ColumnInfo(name = "property_arrival_date") var arrivalDate: String,
-        @ColumnInfo(name = "property_agent") val agent: String
+        @ColumnInfo(name = "property_agent") val agent: String,
+        @ColumnInfo(name = "property_Lat") val propertyLat: Double,
+        @ColumnInfo(name = "property_Long") val propertyLong: Double
+
 )

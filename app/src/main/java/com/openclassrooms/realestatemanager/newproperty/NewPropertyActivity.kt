@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.location.Geocoder
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
@@ -21,8 +22,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.chip.Chip
 import com.openclassrooms.realestatemanager.BuildConfig
+import com.openclassrooms.realestatemanager.NotificationHelper
 import com.openclassrooms.realestatemanager.propertylist.PropertyListActivity
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.Utils
@@ -48,6 +51,10 @@ class NewPropertyActivity : AppCompatActivity() {
     var imageFilePath: String? = null
     private lateinit var photoURI: Uri
     private lateinit var agent: String
+    private var propertyLat: Double = 40.755986
+    private var propertyLong: Double = -73.984712
+
+    private val notification: NotificationHelper = NotificationHelper()
 
     private val TAG = NewPropertyActivity::class.qualifiedName
 
@@ -55,6 +62,7 @@ class NewPropertyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         configureBinding()
+        notification.createNotificationChannel(this)
         getChipType()
         getOrTakePhoto()
         getVideo()
@@ -210,7 +218,8 @@ class NewPropertyActivity : AppCompatActivity() {
             if (result.data != null) {
 
                 val uri: Uri? = result.data?.data
-                uri?.let { videoUri = it }
+                uri?.let { contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                    videoUri = it }
 
                 getThumbVideo(this, videoUri)
             }
@@ -238,6 +247,9 @@ class NewPropertyActivity : AppCompatActivity() {
         val intent = Intent()
         intent.type = "video/*"
         intent.action = Intent.ACTION_OPEN_DOCUMENT
+        intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        intent.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         resultLauncherVideo.launch(intent)
     }
 
@@ -297,9 +309,13 @@ class NewPropertyActivity : AppCompatActivity() {
         val photo = photoListUri
         val video = videoUri
 
+        if (address.isNotEmpty()){getCoordinatesFromAddress(address)}
+
         val property = Property(id, type, price, surface, rooms, bedrooms, bathrooms, description,
-                photo, video, address, asset, interest, sold = false, soldDate = null, arrivalDate = currentDate, agent)
+                photo, video, address, asset, interest, sold = false, soldDate = null, arrivalDate = currentDate, agent, propertyLat, propertyLong)
+        Log.d(TAG, "createNewProperty: $property")
         viewModel.insertNewProperty(property)
+        notification.showNotification()
         startActivity(Intent(this, PropertyListActivity::class.java))
     }
 
@@ -309,4 +325,12 @@ class NewPropertyActivity : AppCompatActivity() {
             null
         } else string.toInt()
     }
+
+    private fun getCoordinatesFromAddress(address: String) {
+        val coord = Geocoder(this);
+        val addresses = coord.getFromLocationName(address, 1)
+        propertyLat = addresses[0].latitude
+        propertyLong = addresses[0].longitude
+    }
+
 }

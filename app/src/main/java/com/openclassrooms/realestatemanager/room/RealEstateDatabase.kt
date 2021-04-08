@@ -7,7 +7,7 @@ import com.openclassrooms.realestatemanager.model.Property
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [Property::class], version = 2)
+@Database(entities = [Property::class], version = 3)
 @TypeConverters(Converters::class)
 abstract class RealEstateDatabase : RoomDatabase() {
     abstract fun propertyDao(): PropertyDao

@@ -6,6 +6,7 @@
     <string name="no">No</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="notificationChannel" translatable="false">notificationChannel</string>
 
 
     //NewProperty
@@ -45,4 +46,24 @@
     <string name="validation_button">VALIDATE</string>
     <string name="title_property_list">Properties</string>
     <string name="title_property_detail">Property Detail</string>
+    <string name="dollar">$</string>
+
+    //Notification
+    <string name="channel_description">Notification channel</string>
+    <string name="channel_name">Real Estate channel</string>
+    <string name="notification_title">New Property Add</string>
+    <string name="notification_body">New property added with success !</string>
+    <string name="room">rooms</string>
+
+    //Menu
+    <string name="menu_map">Map</string>
+    <string name="menu_list">Property List</string>
+    <string name="menu_loan">Loaning</string>
+
+    //Content Description
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

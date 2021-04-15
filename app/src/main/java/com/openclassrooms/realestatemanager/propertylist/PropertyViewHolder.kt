@@ -1,6 +1,10 @@
 package com.openclassrooms.realestatemanager.propertylist
 
+import android.content.res.Resources
+import android.graphics.drawable.LayerDrawable
 import android.net.Uri
+import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ItemPropertyBinding
@@ -14,6 +18,13 @@ class PropertyViewHolder(private var binding: ItemPropertyBinding, private val o
 
         binding.apply {
             imageUri?.let { imageViewProperty.setImageURI(it) }
+            if (property.sold) {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    imageViewProperty.foreground = ResourcesCompat.getDrawable(binding.root.resources, R.drawable.ic_sold, null)
+                }
+                textViewPropertySoldDate.visibility = View.VISIBLE
+                textViewPropertySoldDate.text = property.soldDate
+            }
             textViewNumberRooms.text = checkIfNull(property.room.toString(), " rooms")
             textViewPropertyPlace.text = checkIfNull(property.address.toString(),"")
             textViewPropertyPrice.text = checkIfNull(property.price.toString()," $")

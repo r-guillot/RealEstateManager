@@ -22,21 +22,20 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.chip.Chip
 import com.openclassrooms.realestatemanager.BuildConfig
 import com.openclassrooms.realestatemanager.NotificationHelper
-import com.openclassrooms.realestatemanager.propertylist.PropertyListActivity
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.Utils
 import com.openclassrooms.realestatemanager.databinding.ActivityNewPropertyBinding
+import com.openclassrooms.realestatemanager.detail.PropertyDetailFragment
 import com.openclassrooms.realestatemanager.model.Property
+import com.openclassrooms.realestatemanager.propertylist.PropertyListActivity
 import com.openclassrooms.realestatemanager.room.RealEstateApplication
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 class NewPropertyActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNewPropertyBinding
@@ -48,25 +47,37 @@ class NewPropertyActivity : AppCompatActivity() {
     private var interestList = mutableListOf<String>()
     private var photoListUri = mutableListOf<Uri>()
     private var videoUri: Uri? = null
-    var imageFilePath: String? = null
+    private var imageFilePath: String? = null
     private lateinit var photoURI: Uri
     private lateinit var agent: String
+    private var edit: Boolean = false
+    private var id: String? = null
     private var propertyLat: Double = 40.755986
     private var propertyLong: Double = -73.984712
-
+    private var soldState: Boolean = false
+    private var soldDate: String? = null
+    private lateinit var propertyEdited: Property
     private val notification: NotificationHelper = NotificationHelper()
 
     private val TAG = NewPropertyActivity::class.qualifiedName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         configureBinding()
         notification.createNotificationChannel(this)
         getChipType()
         getOrTakePhoto()
         getVideo()
         validation()
+
+        //check if we receive an intent with extra, if it's yes this is an update so edit become true
+        if (intent.getStringExtra(PropertyDetailFragment.ARG_ITEM_ID) != null) {
+            id = intent.getStringExtra(PropertyDetailFragment.ARG_ITEM_ID)
+            edit = true
+            viewModel.allProperty.observe(this, androidx.lifecycle.Observer { properties ->
+                getProperties(properties)
+            })
+        }
     }
 
     private fun configureBinding() {
@@ -80,7 +91,6 @@ class NewPropertyActivity : AppCompatActivity() {
     private fun getChipType() {
         binding.chipGroupType.setOnCheckedChangeListener { chipGroup, checkedId ->
             typeChoice = chipGroup.findViewById<Chip>(checkedId)?.text
-            Toast.makeText(chipGroup.context, typeChoice ?: "No Choice", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -125,7 +135,7 @@ class NewPropertyActivity : AppCompatActivity() {
         }
     }
 
-
+    //Get photos from gallery and display it in view pager
     private fun getPhotosFromGallery() {
         val intent = Intent()
         intent.type = "image/*"
@@ -138,7 +148,6 @@ class NewPropertyActivity : AppCompatActivity() {
     }
 
     private fun displaySelectedPhotoInViewPager() {
-        Log.d(TAG, "photoList display $photoListUri")
         if (photoListUri.size > 0) {
             binding.viewPager.visibility = View.VISIBLE
             val adapter = ViewPagerAdapter(photoListUri, this, 0.5f)
@@ -149,12 +158,12 @@ class NewPropertyActivity : AppCompatActivity() {
     //ActivityResult after shoot a photo, add it in photoListUri and display it in ViewPager
     private var resultCapturePhoto = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-
             photoListUri.add(photoURI)
             displaySelectedPhotoInViewPager()
         }
     }
 
+    //Taking a photo with camera
     private fun capturePhoto() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         val photoFile: File? = try {
@@ -166,9 +175,7 @@ class NewPropertyActivity : AppCompatActivity() {
         // Continue only if the File was successfully created
         photoFile?.also {
             photoURI = FileProvider.getUriForFile(
-                    this,
-                    BuildConfig.APPLICATION_ID + ".provider",
-                    it)
+                    this, BuildConfig.APPLICATION_ID + ".provider", it)
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
             resultCapturePhoto.launch(cameraIntent)
         }
@@ -182,11 +189,8 @@ class NewPropertyActivity : AppCompatActivity() {
         val imageFileName = "IMG_" + timeStamp + "_"
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         //        imageFilePath = image.absolutePath
-        val image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",  /* suffix */
-                storageDir /* directory */
-        )
+        val image = File.createTempFile(imageFileName,  /* prefix */".jpg",  /* suffix */
+                storageDir /* directory */)
         imageFilePath = image.absolutePath
         return image
     }
@@ -212,15 +216,15 @@ class NewPropertyActivity : AppCompatActivity() {
         }
     }
 
-    ////ActivityResult after get a video
+    //ActivityResult after get a video
     private var resultLauncherVideo = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             if (result.data != null) {
-
                 val uri: Uri? = result.data?.data
-                uri?.let { contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                    videoUri = it }
-
+                uri?.let {
+                    contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                    videoUri = it
+                }
                 getThumbVideo(this, videoUri)
             }
         }
@@ -259,28 +263,41 @@ class NewPropertyActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkIfPropertyIsSold() {
+        soldState = binding.switchSold.isChecked
+        if (soldState) {
+            soldDate = Utils.getTodayDate()
+        }
+    }
+
     //AlertDialog after button pressed, we ask for the name of the agent,
     // if he don't give it, he can't create a new Property
     private fun validation() {
         binding.buttonValidate.setOnClickListener {
             val input = EditText(this)
-            input.hint = "Enter the name of Agent"
+            input.hint = getString(R.string.enter_name)
             input.inputType = InputType.TYPE_CLASS_TEXT
 
             AlertDialog.Builder(this).apply {
-                setTitle("Kotlin message")
-                setView(input)
-                this.setPositiveButton("Yes !") { dialog, _ ->
+                setTitle(getString(R.string.title_alertDialog))
+                if (!edit) {
+                    setView(input)
+                }
+                this.setPositiveButton(getString(R.string.yes)) { dialog, _ ->
                     val text = input.text.toString()
                     if (text.isNotEmpty()) {
                         agent = text
-                        createNewProperty()
+                        createNewProperty(false)
                     } else {
-                        Toast.makeText(context, "You have to give your name", Toast.LENGTH_LONG).show()
+                        if (edit) {
+                            createNewProperty(true)
+                        } else {
+                            Toast.makeText(context, getString(R.string.enter_name_error), Toast.LENGTH_LONG).show()
+                        }
                         dialog.dismiss()
                     }
                 }
-                setNegativeButton("No") { dialog, _ ->
+                setNegativeButton(getString(R.string.no)) { dialog, _ ->
                     dialog.dismiss()
                 }
                 create()
@@ -290,42 +307,45 @@ class NewPropertyActivity : AppCompatActivity() {
     }
 
     //Create a new Property
-    private fun createNewProperty() {
+    private fun createNewProperty(update: Boolean) {
         getChipAsset()
         getChipInterest()
+        checkIfPropertyIsSold()
         val currentDate = Utils.getTodayDate()
 
         val id = (System.currentTimeMillis() / 1000).toInt()
         val address = binding.editTextAddress.text.toString()
-        val surface = checkIfEmpty(binding.editTextSurface.text.toString())
-        val rooms = checkIfEmpty(binding.editTextRoom.text.toString())
-        val bedrooms = checkIfEmpty(binding.editTextBedroom.text.toString())
-        val bathrooms = checkIfEmpty(binding.editTextBathroom.text.toString())
-        val price = checkIfEmpty(binding.editTextPrice.text.toString())
+        val surface = binding.editTextSurface.text.toString()
+        val rooms = binding.editTextRoom.text.toString()
+        val bedrooms = binding.editTextBedroom.text.toString()
+        val bathrooms = binding.editTextBathroom.text.toString()
+        val price = binding.editTextPrice.text.toString()
         val description = binding.editTextDescription.text.toString()
         val asset = assetList
         val interest = interestList
         val type = typeChoice.toString()
         val photo = photoListUri
         val video = videoUri
+        val sold = soldState
+        if (address.isNotEmpty()) {
+            getCoordinatesFromAddress(address)
+        }
 
-        if (address.isNotEmpty()){getCoordinatesFromAddress(address)}
-
-        val property = Property(id, type, price, surface, rooms, bedrooms, bathrooms, description,
-                photo, video, address, asset, interest, sold = false, soldDate = null, arrivalDate = currentDate, agent, propertyLat, propertyLong)
-        Log.d(TAG, "createNewProperty: $property")
-        viewModel.insertNewProperty(property)
-        notification.showNotification()
+        //Check if it's a creation or an update
+        if (!update) {
+            val property = Property(id, type, price, surface, rooms, bedrooms, bathrooms, description,
+                    photo, video, address, asset, interest, sold, soldDate, currentDate, agent, propertyLat, propertyLong)
+            viewModel.insertNewProperty(property)
+            notification.showNotification()
+        } else {
+            val propertyEdit = Property(propertyEdited.id, type, price, surface, rooms, bedrooms, bathrooms, description,
+                    photo, video, address, asset, interest, sold, soldDate, propertyEdited.arrivalDate, propertyEdited.agent, propertyLat, propertyLong)
+            viewModel.updateProperty(propertyEdit)
+        }
         startActivity(Intent(this, PropertyListActivity::class.java))
     }
 
-    //Use for check if the editText with the int is empty or not, return null if is it
-    private fun checkIfEmpty(string: String): Int? {
-        return if (string.isEmpty()) {
-            null
-        } else string.toInt()
-    }
-
+    //get latitude and longitude of the property using its address
     private fun getCoordinatesFromAddress(address: String) {
         val coord = Geocoder(this);
         val addresses = coord.getFromLocationName(address, 1)
@@ -333,4 +353,73 @@ class NewPropertyActivity : AppCompatActivity() {
         propertyLong = addresses[0].longitude
     }
 
+    private fun getProperties(propertyList: List<Property>) {
+        val property = propertyList.find { it.id == id?.toInt() }
+        property?.let { populateWithInfo(it) }
+    }
+
+    //populate editText and chip if is it an update
+    private fun populateWithInfo(property: Property) {
+        this.propertyEdited = property
+        binding.apply {
+            editTextAddress.setText(property.address)
+            editTextSurface.setText(property.surface)
+            editTextRoom.setText(property.room)
+            editTextBedroom.setText(property.bedroom)
+            editTextBathroom.setText(property.bathroom)
+            editTextPrice.setText(property.price)
+            editTextDescription.setText(property.description)
+
+            property.photo?.let {
+                photoListUri = property.photo!!
+                displaySelectedPhotoInViewPager()
+            }
+            if (!property.video.toString().contains("null")) {
+                property.video?.let { getThumbVideo(this@NewPropertyActivity, property.video) }
+            }
+            property.asset?.let { populateChips(property) }
+            if (property.sold) {
+                binding.switchSold.isChecked = true
+                binding.switchSold.isClickable = false
+            }
+        }
+    }
+
+    //Set chip checked if they are present in chipList
+    private fun populateChips(property: Property) {
+        binding.apply {
+            chipParking.isChecked = true; chipCellar.isChecked = true; chipGarage.isChecked = true
+            chipGarden.isChecked = true; chipView.isChecked = true; chipBalcony.isChecked = true
+            chipPool.isChecked = true; chipElevator.isChecked = true; chipSchool.isChecked = true
+            chipBar.isChecked = true;chipLocalCommerce.isChecked = true; chipPark.isChecked = true
+            chipTransport.isChecked = true; chipCultural.isChecked = true; chipHouse.isChecked = true
+            chipLand.isChecked = true; chipApartment.isChecked = true
+        }
+        for (id in binding.chipGroupType.checkedChipIds) {
+            val chip: Chip = binding.chipGroupType.findViewById(id)
+            if (!property.type!!.contains(chip.text.toString())) {
+                chip.isChecked = false
+            }
+        }
+        for (id in binding.chipGroupAsset.checkedChipIds) {
+            val chip: Chip = binding.chipGroupAsset.findViewById(id)
+            if (!property.asset!!.contains(chip.text.toString())) {
+                chip.isChecked = false
+            }
+        }
+        for (id in binding.chipGroupInterest.checkedChipIds) {
+            val chip: Chip = binding.chipGroupInterest.findViewById(id)
+            if (!property.pointOfInterest!!.contains(chip.text.toString())) {
+                chip.isChecked = false
+            }
+        }
+    }
+
+    companion object {
+        /**
+         * The fragment argument representing the item ID that this fragment
+         * represents.
+         */
+        const val ARG_ITEM_ID = "item_id"
+    }
 }

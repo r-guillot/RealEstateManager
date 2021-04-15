@@ -30,4 +30,9 @@
         <item name="android:textAlignment">center</item>
     </style>
 
+    <style name="LoginTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">@color/deepBlue</item>
+        <item name="boxStrokeWidth">2dp</item>
+    </style>
+
 </resources>

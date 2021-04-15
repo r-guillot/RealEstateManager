@@ -1,12 +1,14 @@
 package com.openclassrooms.realestatemanager.detail
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.ViewTreeObserver.OnScrollChangedListener
 import android.widget.MediaController
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -22,6 +24,7 @@ import com.openclassrooms.realestatemanager.databinding.PropertyDetailBinding
 import com.openclassrooms.realestatemanager.main.PropertyListViewModel
 import com.openclassrooms.realestatemanager.main.PropertyListViewModelFactory
 import com.openclassrooms.realestatemanager.model.Property
+import com.openclassrooms.realestatemanager.newproperty.NewPropertyActivity
 import com.openclassrooms.realestatemanager.newproperty.ViewPagerAdapter
 import com.openclassrooms.realestatemanager.room.RealEstateApplication
 
@@ -33,13 +36,17 @@ import com.openclassrooms.realestatemanager.room.RealEstateApplication
  * on handsets.
  */
 class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLayoutAndMapReadyListener {
+    private val TAG = PropertyDetailFragment::class.qualifiedName
     private val viewModel: PropertyListViewModel by viewModels {
         PropertyListViewModelFactory((activity?.application as RealEstateApplication).propertyRepository)
     }
 
     private lateinit var binding: PropertyDetailBinding
+
+        private var propertyMap: Property? = null
     private lateinit var map: GoogleMap
-    private lateinit var videoUri: Uri
+    private var videoUri: Uri? = null
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = PropertyDetailBinding.inflate(layoutInflater)
@@ -47,12 +54,12 @@ class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLay
         binding.viewPager.requestFocus()
         val mapFragment = childFragmentManager.findFragmentById(R.id.googleMap) as SupportMapFragment
         OnMapAndViewReadyListener(mapFragment, this)
+
         return binding.root
     }
 
     private fun getProperties(propertyList: List<Property>) {
         val property = propertyList.find { it.id == arguments?.getString(ARG_ITEM_ID)?.toInt() }
-        Log.d("TAG", "onCreate: $property + argument $arguments")
         property?.let { updateUi(it) }
     }
 
@@ -65,97 +72,133 @@ class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLay
                 // to load content from a content provider.
                 viewModel.allProperty.observe(viewLifecycleOwner, Observer { properties ->
                     getProperties(properties)
-                    Log.d("TAG", "getProperties: $properties + argument $arguments")
                 })
             }
         }
+        editProperty()
     }
 
     private fun updateUi(property: Property) {
-        Log.d("TAG", "onViewCreated: $property")
+        Log.d(TAG, "onViewCreated: $property")
+        this.propertyMap = property
         binding.apply {
-            textViewPropertyType.text = checkIfNull(property.type.toString(), "")
-            textViewPropertyPlace.text = checkIfNull(property.address.toString(), "")
-            textViewPropertySurface.text = checkIfNull(property.surface.toString(), " m²")
-            textViewNumberRooms.text = checkIfNull(property.room.toString(), " rooms")
-            textViewNumberBedroom.text = checkIfNull(property.bedroom.toString(), " bedrooms")
-            textViewNumberBathroom.text = checkIfNull(property.bathroom.toString(), " bathrooms")
-            textViewPropertyPrice.text = checkIfNull(property.price.toString(), " $")
-            textViewDescription.text = checkIfNull(property.description.toString(), "")
+            textViewPropertyType.text = property.type.toString().checkIfEmpty("")
+            textViewPropertyPlace.text = property.address.toString().checkIfEmpty("")
+            textViewPropertySurface.text = property.surface.toString().checkIfEmpty(" m²")
+            textViewNumberRooms.text = property.room.toString().checkIfEmpty(" rooms")
+            textViewNumberBedroom.text = property.bedroom.toString().checkIfEmpty(" bedrooms")
+            textViewNumberBathroom.text = property.bathroom.toString().checkIfEmpty(" bathrooms")
+            textViewPropertyPrice.text = property.price.toString().checkIfEmpty(" $")
+            textViewDescription.text = property.description.toString().checkIfEmpty("")
             textViewPropertyOnlineDate.text = property.arrivalDate
             property.photo?.let { displaySelectedPhotoInViewPager(property) }
             property.asset?.let { addAsset(it) }
             property.pointOfInterest?.let { addInterest(it) }
+            Log.d(TAG, "updateUi: ${property.video}")
 
-            showPropertyPosition(property)
-            Log.d("FS", "updateUi: ${property.video}")
-
-            if (property.video != null) {
-                videoUri = property.video!!
+            if (!property.video.toString().contains("null")) {
+                property.video?.let { displayVideo(it) }
+            } else {
+                binding.videoView.visibility = View.GONE
             }
-            displayVideo(videoUri)
+
+            if (property.sold) {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    binding.viewPager.foreground = ResourcesCompat.getDrawable(binding.root.resources, R.drawable.ic_sold, null)
+                }
+                textViewPropertySoldDate.visibility = View.VISIBLE
+                textViewPropertySoldDate.text = property.soldDate
+            }
         }
+        showPropertyPosition(property)
     }
 
     private fun displaySelectedPhotoInViewPager(property: Property) {
-        if (property.photo?.size!! > 0) {
-            val adapter = activity?.let { ViewPagerAdapter(property.photo!!, it.baseContext, 1.0f) }
+        if (!property.photo.isNullOrEmpty()) {
+            val adapter = ViewPagerAdapter(property.photo!!, requireContext(), 1.0f)
             binding.viewPager.adapter = adapter
         }
     }
 
-    private fun checkIfNull(info: String, unit: String): String {
-        return if (info.contains("null")) {
+    private fun String.checkIfEmpty(unit: String): String {
+        return if (this.isEmpty()) {
             "no info"
         } else {
-            info + unit
+            this + unit
         }
     }
 
     private fun addAsset(assetList: MutableList<String>) {
         val chipGroup = binding.chipGroupAsset
-        for (i in 0 until assetList.size) {
-            val chip = Chip(chipGroup.context)
-            chip.text = assetList[i]
-            chipGroup.addView(chip)
+        chipGroup.removeAllViews()
+        if (assetList[0].isNotEmpty()) {
+            for (i in 0 until assetList.size) {
+                val chip = Chip(chipGroup.context)
+                chip.text = assetList[i]
+                chipGroup.addView(chip)
+            }
+        } else {
+            chipGroup.visibility = View.GONE
+            binding.textViewAssetProperty.visibility = View.GONE
         }
     }
 
     private fun addInterest(interestList: MutableList<String>) {
         val chipGroup = binding.chipGroupInterest
-        for (i in 0 until interestList.size) {
-            val chip = Chip(chipGroup.context)
-            chip.text = interestList[i]
-            chipGroup.addView(chip)
+        chipGroup.removeAllViews()
+        if (interestList[0].isNotEmpty()) {
+            for (i in 0 until interestList.size) {
+                val chip = Chip(chipGroup.context)
+                chip.text = interestList[i]
+                chipGroup.addView(chip)
+            }
+        } else {
+            chipGroup.visibility = View.GONE
+            binding.textViewInterest.visibility = View.GONE
         }
     }
 
     private fun showPropertyPosition(property: Property) {
+        Log.d(TAG, "showPropertyPosition: ${!::map.isInitialized}")
         if (!::map.isInitialized) return
 
-        val propertyPosition = LatLng(property.propertyLat, property.propertyLong)
-        // Center camera on Adelaide marker
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(propertyPosition, 15f))
-        map.addMarker(
-                MarkerOptions()
-                        .position(propertyPosition)
-                        .title(property.address)
-        )
+        if ( propertyMap != null) {
+            val propertyPosition = LatLng(property.propertyLat, property.propertyLong)
+            Log.d(TAG, "showPropertyPosition: $propertyPosition")
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(propertyPosition, 15f))
+            map.addMarker(
+                    MarkerOptions()
+                            .position(propertyPosition)
+                            .title(property.address)
+            )
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
         // return early if the map was not initialised properly
+        Log.d(TAG, "onMapReady: ")
         map = googleMap ?: return
+        propertyMap?.let { showPropertyPosition(it) }
     }
 
     private fun displayVideo(videoUri: Uri) {
         val videoView = binding.videoView
         val mediaController = MediaController(context)
         mediaController.setAnchorView(videoView)
+        binding.root.viewTreeObserver.addOnScrollChangedListener(OnScrollChangedListener { mediaController.hide() })
         videoView.visibility = View.VISIBLE
         videoView.setMediaController(mediaController)
         videoView.setVideoURI(videoUri)
         videoView.seekTo(1)
+    }
+
+    private fun editProperty(){
+        binding.FABEdit.setOnClickListener(View.OnClickListener {
+            val intent = Intent(activity, NewPropertyActivity::class.java).apply {
+                putExtra(NewPropertyActivity.ARG_ITEM_ID, propertyMap?.id.toString())
+            }
+            startActivity(intent)
+        })
     }
 
     companion object {

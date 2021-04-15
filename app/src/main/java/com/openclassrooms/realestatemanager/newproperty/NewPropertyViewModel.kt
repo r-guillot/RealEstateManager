@@ -1,15 +1,23 @@
 package com.openclassrooms.realestatemanager.newproperty
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.openclassrooms.realestatemanager.model.Property
 import kotlinx.coroutines.launch
 
 class NewPropertyViewModel(private val propertyRepository: PropertyRepository): ViewModel() {
 
+    val allProperty: LiveData<List<Property>> = propertyRepository.allProperties.asLiveData()
+
     fun insertNewProperty(property: Property)=viewModelScope.launch {
         propertyRepository.insertProperty(property)
+    }
+
+    fun updateProperty(property: Property)= viewModelScope.launch {
+        propertyRepository.updateProperty(property)
+    }
+
+    fun deleteProperty(property: Property) = viewModelScope.launch {
+        propertyRepository.deleteProperty(property)
     }
 }
 

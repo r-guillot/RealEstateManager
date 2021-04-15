@@ -1,18 +1,14 @@
 package com.openclassrooms.realestatemanager;
 
 import android.content.Context;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.Callable;
 
 /**
  * Created by Philippe on 21/02/2018.
@@ -66,5 +62,18 @@ public class Utils {
         assert connectivityManager != null;
         NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnected();
+    }
+
+    public static boolean hasGPSOn(Context context){
+        boolean gpsInfo = false;
+        LocationManager locationManager =
+                (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+        assert locationManager != null;
+        try {
+            gpsInfo = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return gpsInfo;
     }
 }

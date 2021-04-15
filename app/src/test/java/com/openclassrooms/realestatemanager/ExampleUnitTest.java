@@ -1,5 +1,10 @@
 package com.openclassrooms.realestatemanager;
 
+import android.app.Activity;
+import android.content.Context;
+import android.net.wifi.WifiManager;
+import android.provider.Settings;
+
 import org.junit.Test;
 
 import java.text.DateFormat;
@@ -16,7 +21,6 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
 
     int amount = 10;
-
 
     @Test
     public void checkIfConverterDollarToEuroWork() {

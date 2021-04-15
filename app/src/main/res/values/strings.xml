@@ -6,7 +6,11 @@
     <string name="no">No</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="or"> or </string>
     <string name="notificationChannel" translatable="false">notificationChannel</string>
+    <string name="noConnection">You are not connected to internet</string>
+    <string name="noGPS">You have no GPS signal or your geolocation feature is not active</string>
+    <string name="and">and</string>
 
 
     //NewProperty
@@ -46,7 +50,27 @@
     <string name="validation_button">VALIDATE</string>
     <string name="title_property_list">Properties</string>
     <string name="title_property_detail">Property Detail</string>
+    <string name="title_activity_maps">Map</string>
     <string name="dollar">$</string>
+    <string name="sold">Is it sold ?</string>
+    <string name="title_alertDialog">Creation/Update of propriety</string>
+    <string name="enter_name">Enter the name of Agent</string>
+    <string name="enter_name_error">You have to give your name</string>
+
+    //Mortgage
+    <string name="amount">Amount of your loan</string>
+    <string name="down">Down payment</string>
+    <string name="duration">Duration of your loan in years :</string>
+    <string name="rate">Rate of your loan</string>
+    <string name="calculate">calculate your monthly payments</string>
+    <string name="total_coast">You will pay in total :</string>
+    <string name="monthly_coast">You will pay per month :</string>
+    <string name="no_result">we can/t give you a result if the amount or the rate is empty</string>
+
+    //Filter
+    <string name="surface_between">Surface</string>
+    <string name="min_room">Minimum Room and Bedroom</string>
+    <string name="filter">filter</string>
 
     //Notification
     <string name="channel_description">Notification channel</string>
@@ -57,8 +81,8 @@
 
     //Menu
     <string name="menu_map">Map</string>
-    <string name="menu_list">Property List</string>
     <string name="menu_loan">Loaning</string>
+    <string name="menu_new_property">Create A New Property</string>
 
     //Content Description
     <string name="navigation_drawer_open">Open navigation drawer</string>

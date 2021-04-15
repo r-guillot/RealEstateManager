@@ -3,10 +3,8 @@ package com.openclassrooms.realestatemanager;
 import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import static org.junit.Assert.*;
 
 /**
@@ -19,8 +17,13 @@ public class ExampleInstrumentedTest {
 
     Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
+
     @Test
     public void checkIfConnexionToInternetExist() {
-        Utils.hasInternetConnection(appContext);
+        assertTrue(Utils.hasInternetConnection(appContext));
     }
+
+    @Test
+    public void checkIfGPSIsActivated(){ assertTrue(Utils.hasGPSOn(appContext));
+        System.out.println(Utils.hasGPSOn(appContext) + "gps");}
 }

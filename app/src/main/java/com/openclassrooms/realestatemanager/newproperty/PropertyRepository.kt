@@ -16,6 +16,17 @@ class PropertyRepository(private val propertyDao: PropertyDao) {
         propertyDao.insertProperty(property)
     }
 
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun updateProperty(property: Property){
+        propertyDao.updateProperty(property)
+    }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun deleteProperty(property: Property){
+        propertyDao.deleteWord(property)
+    }
 
     fun getProperty(int: Int): Property {
        return propertyDao.findById(int)

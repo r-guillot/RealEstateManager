@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.*
 import android.view.ViewTreeObserver.OnScrollChangedListener
 import android.widget.MediaController
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,8 +17,9 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.chip.Chip
-import com.openclassrooms.realestatemanager.OnMapAndViewReadyListener
+import com.openclassrooms.realestatemanager.utils.OnMapAndViewReadyListener
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.databinding.PropertyDetailBinding
 import com.openclassrooms.realestatemanager.main.PropertyListViewModel
 import com.openclassrooms.realestatemanager.main.PropertyListViewModelFactory
@@ -27,6 +27,7 @@ import com.openclassrooms.realestatemanager.model.Property
 import com.openclassrooms.realestatemanager.newproperty.NewPropertyActivity
 import com.openclassrooms.realestatemanager.newproperty.ViewPagerAdapter
 import com.openclassrooms.realestatemanager.room.RealEstateApplication
+import com.openclassrooms.realestatemanager.utils.checkIfEmpty
 
 
 /**
@@ -45,14 +46,14 @@ class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLay
 
         private var propertyMap: Property? = null
     private lateinit var map: GoogleMap
-    private var videoUri: Uri? = null
+    private lateinit var mapFragment: SupportMapFragment
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = PropertyDetailBinding.inflate(layoutInflater)
 
         binding.viewPager.requestFocus()
-        val mapFragment = childFragmentManager.findFragmentById(R.id.googleMap) as SupportMapFragment
+        mapFragment = childFragmentManager.findFragmentById(R.id.googleMap) as SupportMapFragment
         OnMapAndViewReadyListener(mapFragment, this)
 
         return binding.root
@@ -67,9 +68,6 @@ class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLay
         super.onViewCreated(view, savedInstanceState)
         arguments?.let {
             if (it.containsKey(ARG_ITEM_ID)) {
-                // Load the dummy content specified by the fragment
-                // arguments. In a real-world scenario, use a Loader
-                // to load content from a content provider.
                 viewModel.allProperty.observe(viewLifecycleOwner, Observer { properties ->
                     getProperties(properties)
                 })
@@ -79,7 +77,6 @@ class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLay
     }
 
     private fun updateUi(property: Property) {
-        Log.d(TAG, "onViewCreated: $property")
         this.propertyMap = property
         binding.apply {
             textViewPropertyType.text = property.type.toString().checkIfEmpty("")
@@ -91,10 +88,10 @@ class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLay
             textViewPropertyPrice.text = property.price.toString().checkIfEmpty(" $")
             textViewDescription.text = property.description.toString().checkIfEmpty("")
             textViewPropertyOnlineDate.text = property.arrivalDate
+            textViewAgent.text = property.agent
             property.photo?.let { displaySelectedPhotoInViewPager(property) }
             property.asset?.let { addAsset(it) }
             property.pointOfInterest?.let { addInterest(it) }
-            Log.d(TAG, "updateUi: ${property.video}")
 
             if (!property.video.toString().contains("null")) {
                 property.video?.let { displayVideo(it) }
@@ -115,16 +112,8 @@ class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLay
 
     private fun displaySelectedPhotoInViewPager(property: Property) {
         if (!property.photo.isNullOrEmpty()) {
-            val adapter = ViewPagerAdapter(property.photo!!, requireContext(), 1.0f)
+            val adapter = ViewPagerAdapter(property.photo!!, requireContext(), 1.0f, property.descriptionPhoto)
             binding.viewPager.adapter = adapter
-        }
-    }
-
-    private fun String.checkIfEmpty(unit: String): String {
-        return if (this.isEmpty()) {
-            "no info"
-        } else {
-            this + unit
         }
     }
 
@@ -159,24 +148,23 @@ class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLay
     }
 
     private fun showPropertyPosition(property: Property) {
-        Log.d(TAG, "showPropertyPosition: ${!::map.isInitialized}")
         if (!::map.isInitialized) return
 
-        if ( propertyMap != null) {
+        if ( propertyMap != null && Utils.hasInternetConnection(context)) {
             val propertyPosition = LatLng(property.propertyLat, property.propertyLong)
-            Log.d(TAG, "showPropertyPosition: $propertyPosition")
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(propertyPosition, 15f))
             map.addMarker(
                     MarkerOptions()
                             .position(propertyPosition)
                             .title(property.address)
             )
+        } else {
+            mapFragment.view?.visibility = View.GONE
         }
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
         // return early if the map was not initialised properly
-        Log.d(TAG, "onMapReady: ")
         map = googleMap ?: return
         propertyMap?.let { showPropertyPosition(it) }
     }

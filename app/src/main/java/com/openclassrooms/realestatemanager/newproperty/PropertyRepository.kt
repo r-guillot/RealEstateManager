@@ -7,8 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class PropertyRepository(private val propertyDao: PropertyDao) {
 
-    val allProperties: Flow<List<Property>> = propertyDao.getAllProperty()
-//    val propertiesByType: Flow<List<Property>> = propertyDao.findByType()
+    val allProperties: Flow<List<Property>> = propertyDao.getAllProperties()
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
@@ -20,12 +19,6 @@ class PropertyRepository(private val propertyDao: PropertyDao) {
     @WorkerThread
     suspend fun updateProperty(property: Property){
         propertyDao.updateProperty(property)
-    }
-
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
-    suspend fun deleteProperty(property: Property){
-        propertyDao.deleteWord(property)
     }
 
     fun getProperty(int: Int): Property {

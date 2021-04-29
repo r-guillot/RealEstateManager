@@ -1,13 +1,9 @@
 package com.openclassrooms.realestatemanager.propertylist
 
-import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
-import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -15,13 +11,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.leinardi.android.speeddial.SpeedDialView
+import com.openclassrooms.realestatemanager.utils.FragmentCallback
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.Utils
+import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.databinding.PropertyListBinding
 import com.openclassrooms.realestatemanager.detail.PropertyDetailActivity
 import com.openclassrooms.realestatemanager.detail.PropertyDetailFragment
+import com.openclassrooms.realestatemanager.filter.FilterFragment
 import com.openclassrooms.realestatemanager.loan.LoaningActivity
 import com.openclassrooms.realestatemanager.main.PropertyListViewModel
 import com.openclassrooms.realestatemanager.main.PropertyListViewModelFactory
@@ -38,12 +35,12 @@ import com.openclassrooms.realestatemanager.room.RealEstateApplication
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-class PropertyListActivity : AppCompatActivity() {
+
+class PropertyListActivity : AppCompatActivity(), FragmentCallback {
     private val viewModel: PropertyListViewModel by viewModels {
         PropertyListViewModelFactory((application as RealEstateApplication).propertyRepository)
     }
     private lateinit var binding: PropertyListBinding
-    private lateinit var adapter: PropertyListAdapter
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -58,6 +55,7 @@ class PropertyListActivity : AppCompatActivity() {
         getProperties()
         checkForPermission()
         goToNewPropertyActivity()
+        filterFabClick()
 
         if (findViewById<NestedScrollView>(R.id.item_detail_container) != null) {
             // The detail container view will be present only in the
@@ -65,7 +63,6 @@ class PropertyListActivity : AppCompatActivity() {
             // If this view is present, then the
             // activity should be in two-pane mode.
             twoPane = true
-            Log.d("TAG", "twoPane: $twoPane")
         }
     }
 
@@ -78,7 +75,6 @@ class PropertyListActivity : AppCompatActivity() {
     private fun getProperties() {
         viewModel.allProperty.observe(this, Observer { properties ->
             configureRecycleView(properties)
-            Log.d("RV", "getProperties: $properties")
         })
     }
 
@@ -86,6 +82,8 @@ class PropertyListActivity : AppCompatActivity() {
         binding.propertyRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@PropertyListActivity)
             adapter = PropertyListAdapter(propertyList, twoPane) { property -> itemClicked(property) }
+            if (twoPane && propertyList.isNotEmpty()){itemClicked(propertyList[0])}
+            if (propertyList.isNullOrEmpty()){}
         }
     }
 
@@ -105,8 +103,6 @@ class PropertyListActivity : AppCompatActivity() {
             val fragment = PropertyDetailFragment().apply {
                 arguments = Bundle().apply {
                     putString(PropertyDetailFragment.ARG_ITEM_ID, property.id.toString())
-                    Log.d("TAG", "propertyId ${property.id} + argument $arguments")
-
                 }
             }
             this.supportFragmentManager
@@ -121,10 +117,21 @@ class PropertyListActivity : AppCompatActivity() {
         }
     }
 
+    private fun filterFabClick(){
+        binding.FABFilter.setOnClickListener(View.OnClickListener {
+            FilterFragment().apply {
+                show(supportFragmentManager, FilterFragment.TAG)
+            }
+        })
+    }
+
+    override fun onPropertyFiltered(mutableList: MutableList<Property>) {
+        configureRecycleView(mutableList)
+    }
+
     private fun goToNewPropertyActivity() {
-        val speedDialView = findViewById<SpeedDialView>(R.id.speed_dial)
-        binding.speedDial?.inflate(R.menu.fab_speed_dial_menu)
-        speedDialView.setOnActionSelectedListener(SpeedDialView.OnActionSelectedListener { actionItem ->
+        binding.speedDial.inflate(R.menu.fab_speed_dial_menu)
+        binding.speedDial.setOnActionSelectedListener(SpeedDialView.OnActionSelectedListener { actionItem ->
             when (actionItem.id) {
                 R.id.action_new_property -> {
                     intent = Intent(this@PropertyListActivity, NewPropertyActivity::class.java)
@@ -135,7 +142,7 @@ class PropertyListActivity : AppCompatActivity() {
                         intent = Intent(this@PropertyListActivity, MapsActivity::class.java)
                     } else {
                         val errorMessage = getString(R.string.noConnection) + getString(R.string.or) + getString(R.string.noGPS)
-                        Toast.makeText(this,errorMessage,Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
                     }
                 }
                 R.id.action_loan -> {

@@ -16,8 +16,7 @@ import com.openclassrooms.realestatemanager.detail.FullScreenImage
 import java.io.File
 
 
-class ViewPagerAdapter(var list: MutableList<Uri>, var context: Context, var width: Float) : PagerAdapter() {
-    var bitmap: Bitmap? = null
+class ViewPagerAdapter(var list: List<Uri>, var context: Context, var width: Float, var photoDescription: List<String>?) : PagerAdapter() {
 
     override fun getCount(): Int {
         return list.size
@@ -31,6 +30,14 @@ class ViewPagerAdapter(var list: MutableList<Uri>, var context: Context, var wid
         val binding = ItemViewpagerBinding.inflate(LayoutInflater.from(context), container, false)
         binding.root
         binding.imageViewViewPager.setImageURI(list[position])
+
+        if (photoDescription != null && photoDescription?.size!! > position &&
+                photoDescription?.get(position).toString().isNotBlank()){
+            binding.textViewImageDescription.text = photoDescription?.get(position)
+            binding.textViewImageDescription.visibility = View.VISIBLE
+        } else {
+            binding.textViewImageDescription.visibility = View.GONE
+        }
         container.addView(binding.root, 0)
 
         binding.imageViewViewPager.setOnClickListener {
@@ -43,7 +50,6 @@ class ViewPagerAdapter(var list: MutableList<Uri>, var context: Context, var wid
                 context.startActivity(intent)
             }
         }
-
         return binding.root
     }
 

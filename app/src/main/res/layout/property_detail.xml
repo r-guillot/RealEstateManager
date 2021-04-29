@@ -40,13 +40,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
-            android:text="HOUSE"
             android:textAllCaps="true"
-
             android:textColor="@color/royalBlue"
-
             android:textSize="17sp"
             android:textStyle="bold"
+
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/viewPager" />
 
@@ -57,9 +55,6 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:maxLines="2"
-
-            android:text="adress de mort"
-
             android:textColor="@color/dark"
             android:textSize="14sp"
 
@@ -72,12 +67,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
-            android:text="150 m²"
             android:textColor="@color/dark"
             android:textSize="15sp"
-
             android:textStyle="bold"
-
 
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_property_place" />
@@ -88,10 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:drawablePadding="10dp"
-            android:text="8"
-
             android:textColor="@color/dark"
-
             android:textSize="15sp"
             android:textStyle="bold"
             app:drawableStartCompat="@drawable/ic_baseline_home_24"
@@ -106,10 +95,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
             android:drawablePadding="10dp"
-            android:text="5"
-
             android:textColor="@color/dark"
-
             android:textSize="15sp"
             android:textStyle="bold"
             app:drawableStartCompat="@drawable/ic_baseline_king_bed_24"
@@ -122,8 +108,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="10dp"
-            android:text="2"
-
             android:textColor="@color/dark"
 
             android:textSize="15sp"
@@ -139,10 +123,8 @@
             android:id="@+id/textView_property_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="5455646"
             android:textColor="@color/red"
             android:textSize="23sp"
-
             android:textStyle="bold"
 
             app:layout_constraintBottom_toBottomOf="@+id/textView_property_type"
@@ -207,14 +189,35 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginBottom="8dp"
-
-            android:text="Quis enim aut eum diligat quem metuat, aut eum a quo se metui putet? Coluntur tamen simulatione dumtaxat ad tempus. Quod si forte, ut fit plerumque, ceciderunt, tum intellegitur quam fuerint inopes amicorum. Quod Tarquinium dixisse ferunt, tum exsulantem se intellexisse quos fidos amicos habuisset, quos infidos, cum iam neutris gratiam referre posset."
-
             android:textColor="@color/dark"
             android:textSize="15sp"
 
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/chipGroup_interest" />
+
+        <TextView
+            android:id="@+id/textView_agent_title"
+            style="@style/title_string"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/agent"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_description" />
+
+        <TextView
+            android:id="@+id/textView_agent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/dark"
+            android:textSize="15sp"
+
+            app:layout_constraintBottom_toBottomOf="@+id/textView_agent_title"
+            app:layout_constraintStart_toEndOf="@+id/textView_agent_title"
+            app:layout_constraintTop_toTopOf="@+id/textView_agent_title" />
 
         <TextView
             android:id="@+id/textView_property_online_date"
@@ -226,7 +229,7 @@
             android:textSize="12sp"
 
             app:layout_constraintStart_toStartOf="@+id/textView_property_place"
-            app:layout_constraintTop_toBottomOf="@id/textView_description" />
+            app:layout_constraintTop_toBottomOf="@id/textView_agent" />
 
         <TextView
             android:id="@+id/textView_property_sold_date"
@@ -237,10 +240,10 @@
             android:visibility="gone"
 
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textView_description" />
+            app:layout_constraintTop_toBottomOf="@id/textView_agent" />
 
 
-        <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
+        <androidx.fragment.app.FragmentContainerView xmlns:map="http://schemas.android.com/apk/res-auto"
             android:id="@+id/googleMap"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"

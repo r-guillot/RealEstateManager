@@ -13,9 +13,10 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.InputType
-import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -23,10 +24,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipDrawable
+import com.google.android.material.chip.ChipGroup
 import com.openclassrooms.realestatemanager.BuildConfig
-import com.openclassrooms.realestatemanager.NotificationHelper
+import com.openclassrooms.realestatemanager.utils.NotificationHelper
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.Utils
+import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.databinding.ActivityNewPropertyBinding
 import com.openclassrooms.realestatemanager.detail.PropertyDetailFragment
 import com.openclassrooms.realestatemanager.model.Property
@@ -45,6 +48,7 @@ class NewPropertyActivity : AppCompatActivity() {
     private var typeChoice: CharSequence? = null
     private var assetList = mutableListOf<String>()
     private var interestList = mutableListOf<String>()
+    private var descriptionPhotoList = mutableListOf<String>()
     private var photoListUri = mutableListOf<Uri>()
     private var videoUri: Uri? = null
     private var imageFilePath: String? = null
@@ -58,8 +62,6 @@ class NewPropertyActivity : AppCompatActivity() {
     private var soldDate: String? = null
     private lateinit var propertyEdited: Property
     private val notification: NotificationHelper = NotificationHelper()
-
-    private val TAG = NewPropertyActivity::class.qualifiedName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,6 +110,13 @@ class NewPropertyActivity : AppCompatActivity() {
         }
     }
 
+    private fun getChipDescription() {
+        for (i in 0 until binding.chipGroup.childCount) {
+            val chip = binding.chipGroup.getChildAt(i) as Chip
+            descriptionPhotoList.add(chip.text.toString())
+        }
+    }
+
     //ActivityResult after getting pictures in gallery(one or multiple) and display them in ViewPager
     private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -150,8 +159,9 @@ class NewPropertyActivity : AppCompatActivity() {
     private fun displaySelectedPhotoInViewPager() {
         if (photoListUri.size > 0) {
             binding.viewPager.visibility = View.VISIBLE
-            val adapter = ViewPagerAdapter(photoListUri, this, 0.5f)
+            val adapter = ViewPagerAdapter(photoListUri, this, 0.5f, null)
             binding.viewPager.adapter = adapter
+            addDescriptionForPhoto()
         }
     }
 
@@ -207,13 +217,39 @@ class NewPropertyActivity : AppCompatActivity() {
                 setNegativeButton(resources.getString(R.string.shoot_photo)) { _, _ ->
                     capturePhoto()
                 }
-                setNeutralButton(resources.getString(R.string.cancel)) { dialog, _ ->
+                setNeutralButton(resources.getString(R.string.delete_photo)) { dialog, _ ->
+                    photoListUri.removeAll(photoListUri)
+                    binding.viewPager.visibility = View.GONE
                     dialog.dismiss()
                 }
                 create()
                 show()
             }
         }
+    }
+
+    private fun addDescriptionForPhoto() {
+        binding.textInputLayoutImageDescription.visibility = View.VISIBLE
+        binding.textInputEditTextImageDescription.setOnEditorActionListener(OnEditorActionListener { textView, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                val description = textView.text.toString().trim { it <= ' ' }
+                if (description.isNotEmpty()) {
+                    addChipToGroup(description, binding.chipGroup)
+                    binding.textInputEditTextImageDescription.setText("")
+                }
+                return@OnEditorActionListener true
+            }
+            false
+        })
+    }
+
+    private fun addChipToGroup(text: String, chipGroup: ChipGroup) {
+        val chip = Chip(this)
+        chip.setChipDrawable(ChipDrawable.createFromResource(this, R.xml.chip))
+        chip.text = text
+        chipGroup.addView(chip)
+        chip.isCloseIconVisible
+        chip.setOnCloseIconClickListener { chipGroup.removeView(chip) }
     }
 
     //ActivityResult after get a video
@@ -259,7 +295,19 @@ class NewPropertyActivity : AppCompatActivity() {
 
     private fun getVideo() {
         binding.buttonAddVideo.setOnClickListener {
-            getVideoFromGallery()
+            AlertDialog.Builder(this).apply {
+                setTitle(resources.getString(R.string.add_video_title))
+                this.setPositiveButton(resources.getString(R.string.video_gallery)) { _, _ ->
+                    getVideoFromGallery()
+                }
+                setNegativeButton(resources.getString(R.string.delete_video)) { dialog, _ ->
+                    videoUri = null
+                    binding.imageViewVideo.visibility = View.VISIBLE
+                    dialog.dismiss()
+                }
+                create()
+                show()
+            }
         }
     }
 
@@ -278,30 +326,34 @@ class NewPropertyActivity : AppCompatActivity() {
             input.hint = getString(R.string.enter_name)
             input.inputType = InputType.TYPE_CLASS_TEXT
 
-            AlertDialog.Builder(this).apply {
-                setTitle(getString(R.string.title_alertDialog))
-                if (!edit) {
-                    setView(input)
-                }
-                this.setPositiveButton(getString(R.string.yes)) { dialog, _ ->
-                    val text = input.text.toString()
-                    if (text.isNotEmpty()) {
-                        agent = text
-                        createNewProperty(false)
-                    } else {
-                        if (edit) {
-                            createNewProperty(true)
+            if (!photoListUri.isNullOrEmpty()) {
+                AlertDialog.Builder(this).apply {
+                    setTitle(getString(R.string.title_alertDialog))
+                    if (!edit) {
+                        setView(input)
+                    }
+                    this.setPositiveButton(getString(R.string.yes)) { dialog, _ ->
+                        val text = input.text.toString()
+                        if (text.isNotEmpty()) {
+                            agent = text
+                            createNewProperty(false)
                         } else {
-                            Toast.makeText(context, getString(R.string.enter_name_error), Toast.LENGTH_LONG).show()
+                            if (edit) {
+                                createNewProperty(true)
+                            } else {
+                                Toast.makeText(this@NewPropertyActivity, getString(R.string.enter_name_error), Toast.LENGTH_LONG).show()
+                            }
                         }
                         dialog.dismiss()
                     }
+                    setNegativeButton(getString(R.string.no)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    create()
+                    show()
                 }
-                setNegativeButton(getString(R.string.no)) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                create()
-                show()
+            } else {
+                Toast.makeText(this, getString(R.string.photo_error), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -310,6 +362,7 @@ class NewPropertyActivity : AppCompatActivity() {
     private fun createNewProperty(update: Boolean) {
         getChipAsset()
         getChipInterest()
+        getChipDescription()
         checkIfPropertyIsSold()
         val currentDate = Utils.getTodayDate()
 
@@ -325,6 +378,7 @@ class NewPropertyActivity : AppCompatActivity() {
         val interest = interestList
         val type = typeChoice.toString()
         val photo = photoListUri
+        val photoDescription = descriptionPhotoList
         val video = videoUri
         val sold = soldState
         if (address.isNotEmpty()) {
@@ -334,12 +388,12 @@ class NewPropertyActivity : AppCompatActivity() {
         //Check if it's a creation or an update
         if (!update) {
             val property = Property(id, type, price, surface, rooms, bedrooms, bathrooms, description,
-                    photo, video, address, asset, interest, sold, soldDate, currentDate, agent, propertyLat, propertyLong)
+                    photo, photoDescription, video, address, asset, interest, sold, soldDate, currentDate, agent, propertyLat, propertyLong)
             viewModel.insertNewProperty(property)
             notification.showNotification()
         } else {
             val propertyEdit = Property(propertyEdited.id, type, price, surface, rooms, bedrooms, bathrooms, description,
-                    photo, video, address, asset, interest, sold, soldDate, propertyEdited.arrivalDate, propertyEdited.agent, propertyLat, propertyLong)
+                    photo, photoDescription, video, address, asset, interest, sold, soldDate, propertyEdited.arrivalDate, propertyEdited.agent, propertyLat, propertyLong)
             viewModel.updateProperty(propertyEdit)
         }
         startActivity(Intent(this, PropertyListActivity::class.java))
@@ -347,9 +401,10 @@ class NewPropertyActivity : AppCompatActivity() {
 
     //get latitude and longitude of the property using its address
     private fun getCoordinatesFromAddress(address: String) {
-        val coord = Geocoder(this);
-        val addresses = coord.getFromLocationName(address, 1)
-        propertyLat = addresses[0].latitude
+//        val cord = Geocoder(this)
+//        val addresses = cord.getFromLocationName(address, 1)
+        val addresses = viewModel.getCord(address, this)
+        propertyLat = addresses?.get(0)!!.latitude
         propertyLong = addresses[0].longitude
     }
 
@@ -370,14 +425,17 @@ class NewPropertyActivity : AppCompatActivity() {
             editTextPrice.setText(property.price)
             editTextDescription.setText(property.description)
 
-            property.photo?.let {
+            if (property.photo?.get(0).toString().contains("null") || property.photo?.get(0).toString().isBlank()) {
+                photoListUri.removeAll(photoListUri)
+                binding.viewPager.visibility = View.GONE
+            } else {
                 photoListUri = property.photo!!
                 displaySelectedPhotoInViewPager()
             }
             if (!property.video.toString().contains("null")) {
                 property.video?.let { getThumbVideo(this@NewPropertyActivity, property.video) }
             }
-            property.asset?.let { populateChips(property) }
+            populateChips(property)
             if (property.sold) {
                 binding.switchSold.isChecked = true
                 binding.switchSold.isClickable = false
@@ -411,6 +469,16 @@ class NewPropertyActivity : AppCompatActivity() {
             val chip: Chip = binding.chipGroupInterest.findViewById(id)
             if (!property.pointOfInterest!!.contains(chip.text.toString())) {
                 chip.isChecked = false
+            }
+        }
+        for (description in property.descriptionPhoto!!) {
+            if (description.isNotEmpty()) {
+                val chip = Chip(this)
+                chip.text = description
+                binding.chipGroup.addView(chip)
+                chip.setOnClickListener(View.OnClickListener { binding.chipGroup.removeView(chip) })
+            } else {
+                binding.chipGroup.visibility = View.GONE
             }
         }
     }

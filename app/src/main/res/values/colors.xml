@@ -14,5 +14,6 @@
     <color name="mediumBlue">#AFD7FF</color>
     <color name="darkBlue">#0A41C1</color>
     <color name="transparent">#00242424</color>
+    <color name="foreground">#80242424</color>
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#255FDB</color>
 </resources>

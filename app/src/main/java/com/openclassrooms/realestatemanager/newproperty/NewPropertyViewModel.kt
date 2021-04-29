@@ -1,5 +1,8 @@
 package com.openclassrooms.realestatemanager.newproperty
 
+import android.content.Context
+import android.location.Address
+import android.location.Geocoder
 import androidx.lifecycle.*
 import com.openclassrooms.realestatemanager.model.Property
 import kotlinx.coroutines.launch
@@ -16,8 +19,9 @@ class NewPropertyViewModel(private val propertyRepository: PropertyRepository): 
         propertyRepository.updateProperty(property)
     }
 
-    fun deleteProperty(property: Property) = viewModelScope.launch {
-        propertyRepository.deleteProperty(property)
+    fun getCord(address: String, context: Context): MutableList<Address>? {
+        val cord = Geocoder(context)
+        return cord.getFromLocationName(address, 1)
     }
 }
 

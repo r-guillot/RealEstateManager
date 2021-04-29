@@ -8,6 +8,6 @@ import kotlinx.coroutines.SupervisorJob
 class RealEstateApplication : Application() {
     private val applicationScope = CoroutineScope(SupervisorJob())
 
-    private val realEstateDatabase by lazy {  RealEstateDatabase.getDatabase(this, applicationScope) }
+    private val realEstateDatabase by lazy {  RealEstateDatabase.getDatabase(this) }
     val propertyRepository by lazy { PropertyRepository(realEstateDatabase.propertyDao()) }
 }

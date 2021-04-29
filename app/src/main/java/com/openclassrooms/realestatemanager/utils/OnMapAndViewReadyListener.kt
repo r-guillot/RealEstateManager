@@ -1,7 +1,6 @@
-package com.openclassrooms.realestatemanager
+package com.openclassrooms.realestatemanager.utils
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import com.google.android.gms.maps.GoogleMap

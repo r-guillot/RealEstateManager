@@ -1,428 +1,446 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    tools:context=".newproperty.NewPropertyActivity">
+    android:fillViewport="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <TextView
+        android:id="@+id/textView_title"
+        style="@style/title_string"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/filter_title"
+        android:textColor="@color/deepBlue"
+        android:textSize="20sp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_type"
+        style="@style/title_string"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
 
-        <TextView
-            android:id="@+id/textView_type"
-            style="@style/title_string"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="10dp"
+        android:text="@string/type"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_title" />
 
-            android:text="@string/type"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintStart_toStartOf="parent"
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroup_type"
-            android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_type"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_house"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/house"
+            android:theme="@style/choice_chip" />
 
-            app:layout_constraintTop_toBottomOf="@+id/textView_type"
-            app:singleSelection="true">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_house"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:drawableTop="@drawable/ic_house"
-                android:text="@string/house"
-                android:theme="@style/choice_chip" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_apartment"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="10dp"
-                android:drawableTop="@drawable/ic_condominium"
-                android:text="@string/condo"
-                android:theme="@style/choice_chip" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_land"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="10dp"
-                android:drawableTop="@drawable/ic_landscape"
-                android:text="@string/land"
-                android:theme="@style/choice_chip" />
-
-        </com.google.android.material.chip.ChipGroup>
-
-        <TextView
-            android:id="@+id/textView_surface"
-            style="@style/title_string"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_apartment"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_margin="15dp"
-            android:text="@string/surface_between"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/chipGroup_type" />
-
-        <EditText
-            android:id="@+id/editText_surface_min"
-            style="@style/hint_string"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="40dp"
-            android:gravity="end"
-
-            android:hint="@string/m2"
-            android:inputType="number"
-            app:layout_constraintEnd_toStartOf="@+id/textView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_surface" />
-
-        <TextView
-            android:id="@+id/textView"
-            style="@style/title_string"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="40dp"
-            android:text="@string/and"
-
-            app:layout_constraintBottom_toBottomOf="@+id/editText_surface_max"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editText_surface_max" />
-
-        <EditText
-            android:id="@+id/editText_surface_max"
-            style="@style/hint_string"
-            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/condo"
+            android:theme="@style/choice_chip" />
 
-            android:gravity="end"
-            android:hint="@string/m2"
-            android:inputType="number"
-            app:layout_constraintStart_toEndOf="@+id/textView"
-            app:layout_constraintTop_toBottomOf="@+id/textView_surface" />
-
-        <TextView
-            android:id="@+id/textView_min_room"
-            style="@style/title_string"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_land"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:layout_marginStart="15dp"
-
-            android:text="@string/min_room"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText_surface_min" />
-
-        <EditText
-            android:id="@+id/editText_room"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="15dp"
-            android:drawableEnd="@drawable/ic_baseline_home_24"
-
-            android:inputType="number"
-            app:layout_constraintStart_toStartOf="@+id/textView_min_room"
-            app:layout_constraintTop_toBottomOf="@+id/textView_min_room" />
-
-        <EditText
-            android:id="@+id/editText_bedroom"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ic_baseline_king_bed_24"
-            android:inputType="number"
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/editText_room"
-            app:layout_constraintTop_toTopOf="@+id/editText_room" />
-
-        <TextView
-            android:id="@+id/textView_price"
-            style="@style/title_string"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="15dp"
-            android:text="@string/price"
-
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText_room" />
-
-        <EditText
-            android:id="@+id/editText_price_min"
-            style="@style/hint_string"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="40dp"
-            android:drawableEnd="@drawable/ic_baseline_attach_money_24"
-            android:inputType="number"
-
-            app:layout_constraintEnd_toStartOf="@+id/textView_price_and"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_price" />
-
-        <TextView
-            android:id="@+id/textView_price_and"
-            style="@style/title_string"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="40dp"
-            android:text="@string/and"
-
-            app:layout_constraintBottom_toBottomOf="@+id/editText_price_min"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editText_price_min" />
-
-        <EditText
-            android:id="@+id/editText_price_max"
-            style="@style/hint_string"
-            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="12dp"
-            android:drawableEnd="@drawable/ic_baseline_attach_money_24"
-            android:inputType="number"
+            android:layout_marginTop="10dp"
+            android:text="@string/land"
+            android:theme="@style/choice_chip" />
 
-            app:layout_constraintStart_toEndOf="@+id/textView_price_and"
-            app:layout_constraintTop_toBottomOf="@+id/textView_price" />
+    </com.google.android.material.chip.ChipGroup>
+
+    <TextView
+        android:id="@+id/textView_surface"
+        style="@style/title_string"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_margin="10dp"
+        android:text="@string/surface_between"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chipGroup_type" />
+
+    <EditText
+        android:id="@+id/editText_surface_min"
+        style="@style/hint_string"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="40dp"
+        android:gravity="end"
+
+        android:hint="@string/m2"
+        android:inputType="number"
+        app:layout_constraintEnd_toStartOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_surface" />
+
+    <TextView
+        android:id="@+id/textView"
+        style="@style/title_string"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="40dp"
+        android:text="@string/and"
+
+        app:layout_constraintBottom_toBottomOf="@+id/editText_surface_max"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editText_surface_max" />
+
+    <EditText
+        android:id="@+id/editText_surface_max"
+        style="@style/hint_string"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="10dp"
+
+        android:gravity="end"
+        android:hint="@string/m2"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView_surface" />
+
+    <TextView
+        android:id="@+id/textView_min_room"
+        style="@style/title_string"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+
+        android:text="@string/min_room"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_surface_min" />
+
+    <EditText
+        android:id="@+id/editText_room"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:drawableEnd="@drawable/ic_baseline_home_24"
+
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="@+id/textView_min_room"
+        app:layout_constraintTop_toBottomOf="@+id/textView_min_room" />
+
+    <EditText
+        android:id="@+id/editText_bedroom"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/ic_baseline_king_bed_24"
+        android:inputType="number"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/editText_room"
+        app:layout_constraintTop_toTopOf="@+id/editText_room" />
+
+    <TextView
+        android:id="@+id/textView_price"
+        style="@style/title_string"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/price"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_room" />
+
+    <EditText
+        android:id="@+id/editText_price_min"
+        style="@style/hint_string"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="40dp"
+        android:drawableEnd="@drawable/ic_baseline_attach_money_24"
+        android:inputType="number"
+
+        app:layout_constraintEnd_toStartOf="@+id/textView_price_and"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_price" />
+
+    <TextView
+        android:id="@+id/textView_price_and"
+        style="@style/title_string"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="40dp"
+        android:text="@string/and"
+
+        app:layout_constraintBottom_toBottomOf="@+id/editText_price_min"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editText_price_min" />
+
+    <EditText
+        android:id="@+id/editText_price_max"
+        style="@style/hint_string"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="10dp"
+        android:drawableEnd="@drawable/ic_baseline_attach_money_24"
+        android:inputType="number"
+
+        app:layout_constraintStart_toEndOf="@+id/textView_price_and"
+        app:layout_constraintTop_toBottomOf="@+id/textView_price" />
 
 
+    <TextView
+        android:id="@+id/textView_asset_property"
+        style="@style/title_string"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="@string/asset"
 
-        <TextView
-            android:id="@+id/textView_asset_property"
-            style="@style/title_string"
-            android:layout_width="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_price_min" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup_asset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_asset_property">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_cellar"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/cellar"
+            android:theme="@style/little_choice_chip" />
 
-            android:text="@string/asset"
-
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText_price_min" />
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroup_asset"
-            android:layout_width="match_parent"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_parking"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/parking"
+            android:theme="@style/little_choice_chip" />
 
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_asset_property">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_cellar"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/cellar"
-                android:theme="@style/little_choice_chip" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_parking"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/parking"
-                android:theme="@style/little_choice_chip" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_garage"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/garage"
-                android:theme="@style/little_choice_chip" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_garden"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/garden"
-                android:theme="@style/little_choice_chip" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_view"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/view"
-                android:theme="@style/little_choice_chip" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_balcony"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/balcony"
-                android:theme="@style/little_choice_chip" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_pool"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/pool"
-                android:theme="@style/little_choice_chip" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_elevator"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/elevator"
-                android:theme="@style/little_choice_chip" />
-
-        </com.google.android.material.chip.ChipGroup>
-
-        <TextView
-            android:id="@+id/textView_interest"
-            style="@style/title_string"
-            android:layout_width="match_parent"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_garage"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/garage"
+            android:theme="@style/little_choice_chip" />
 
-            android:text="@string/interest"
-
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chipGroup_asset" />
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroup_interest"
-            android:layout_width="match_parent"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_garden"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/garden"
+            android:theme="@style/little_choice_chip" />
 
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_interest">
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_view"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/view"
+            android:theme="@style/little_choice_chip" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_school"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/school"
-                android:theme="@style/little_choice_chip" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_balcony"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/balcony"
+            android:theme="@style/little_choice_chip" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_bar"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/bar"
-                android:theme="@style/little_choice_chip" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_pool"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/pool"
+            android:theme="@style/little_choice_chip" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_local_commerce"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/commerce"
-                android:theme="@style/little_choice_chip" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_elevator"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/elevator"
+            android:theme="@style/little_choice_chip" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_park"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/park"
-                android:theme="@style/little_choice_chip" />
+    </com.google.android.material.chip.ChipGroup>
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_transport"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/transport"
-                android:theme="@style/little_choice_chip" />
+    <TextView
+        android:id="@+id/textView_interest"
+        style="@style/title_string"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_cultural"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/culture"
-                android:theme="@style/little_choice_chip" />
+        android:text="@string/interest"
 
-        </com.google.android.material.chip.ChipGroup>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chipGroup_asset" />
 
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup_interest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_interest">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_school"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/school"
+            android:theme="@style/little_choice_chip" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_bar"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/bar"
+            android:theme="@style/little_choice_chip" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_local_commerce"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/commerce"
+            android:theme="@style/little_choice_chip" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_park"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/park"
+            android:theme="@style/little_choice_chip" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_transport"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/transport"
+            android:theme="@style/little_choice_chip" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_cultural"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/culture"
+            android:theme="@style/little_choice_chip" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+
+    <LinearLayout
+        android:id="@+id/linear_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chipGroup_interest">
 
         <Button
             android:id="@+id/button_validate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="75dp"
+            android:text="@string/filter"/>
+
+        <Button
+            android:id="@+id/button_no_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
 
             android:layout_marginBottom="20dp"
-            android:text="@string/filter"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chipGroup_interest" />
+            android:text="@string/no_filter"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,5 @@
 package com.openclassrooms.realestatemanager.propertylist
 
-import android.content.res.Resources
-import android.graphics.drawable.LayerDrawable
 import android.net.Uri
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
@@ -14,7 +12,6 @@ class PropertyViewHolder(private var binding: ItemPropertyBinding, private val o
 
     fun updatePropertyInfo(property: Property) {
         val imageUri: Uri? = property.photo?.get(0)
-        var text: String
 
         binding.apply {
             imageUri?.let { imageViewProperty.setImageURI(it) }
@@ -26,10 +23,10 @@ class PropertyViewHolder(private var binding: ItemPropertyBinding, private val o
                 textViewPropertySoldDate.text = property.soldDate
             }
             textViewNumberRooms.text = checkIfNull(property.room.toString(), " rooms")
-            textViewPropertyPlace.text = checkIfNull(property.address.toString(),"")
-            textViewPropertyPrice.text = checkIfNull(property.price.toString()," $")
-            textViewPropertySurface.text = checkIfNull(property.surface.toString()," m²")
-            textViewPropertyType.text = checkIfNull(property.type.toString(),"")
+            textViewPropertyPlace.text = checkIfNull(property.address.toString(), "")
+            textViewPropertyPrice.text = checkIfNull(property.price.toString(), " $")
+            textViewPropertySurface.text = checkIfNull(property.surface.toString(), " m²")
+            textViewPropertyType.text = checkIfNull(property.type.toString(), "")
             textViewPropertyOnlineDate.text = property.arrivalDate
         }
 
@@ -43,5 +40,4 @@ class PropertyViewHolder(private var binding: ItemPropertyBinding, private val o
             info + unit
         }
     }
-
 }

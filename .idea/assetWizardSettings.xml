@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/monetization_on/baseline_monetization_on_24.xml" />
+                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/settings/baseline_settings_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -30,9 +30,8 @@
                           <map>
                             <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="255fdb" />
-                            <entry key="opacityPercent" value="50" />
-                            <entry key="outputName" value="ic_sold" />
-                            <entry key="sourceFile" value="D:\Bureau\sold.svg" />
+                            <entry key="outputName" value="ic_delete" />
+                            <entry key="sourceFile" value="D:\Bureau\cancel.svg" />
                           </map>
                         </option>
                       </PersistentState>

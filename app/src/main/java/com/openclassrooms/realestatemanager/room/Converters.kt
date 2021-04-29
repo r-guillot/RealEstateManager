@@ -40,16 +40,4 @@ class Converters {
     @TypeConverter
     fun stringToString(string: String?): MutableList<String>? =
             string?.split(SEPARATOR)?.map { it.toString() }?.toMutableList()
-
-
-    @TypeConverter
-    fun fromBitmap(bmp: MutableList<Bitmap>?): ByteArray? {
-        val outputStream = ByteArrayOutputStream()
-        return bmp?.map {it.compress(Bitmap.CompressFormat.PNG, 100, outputStream) }?.let { outputStream.toByteArray() }
-    }
-
-    @TypeConverter
-    fun toBitmap(bytes: ByteArray?): MutableList<Bitmap> {
-        return bytes?.map { BitmapFactory.decodeByteArray(bytes, 0, bytes.size) } as MutableList<Bitmap>
-    }
 }

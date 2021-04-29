@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager
+package com.openclassrooms.realestatemanager.utils
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -8,8 +8,8 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.propertylist.PropertyListActivity
 
 class NotificationHelper {

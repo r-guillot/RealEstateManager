@@ -116,16 +116,16 @@
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switch_sold"
+            style="@style/title_string"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sold"
-            style="@style/title_string"
-            app:switchPadding="10dp"
-
             app:layout_constraintBottom_toBottomOf="@+id/editText_price"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/editText_price"
-            app:layout_constraintTop_toTopOf="@+id/editText_price"/>
+            app:layout_constraintTop_toTopOf="@+id/editText_price"
+            app:switchPadding="10dp" />
 
         <TextView
             android:id="@+id/textView_description"
@@ -420,7 +420,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:layout_marginEnd="25dp"
+                android:layout_marginEnd="15dp"
                 android:text="@string/add_photo" />
 
             <Button
@@ -443,6 +443,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linear_button" />
 
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            app:closeIconEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/viewPager" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout_image_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+
+            app:layout_constraintTop_toBottomOf="@+id/chipGroup">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textInputEditText_image_description"
+                style="@style/hint_string"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@android:color/transparent"
+                android:hint="@string/image_description"
+                android:inputType="text"
+                android:imeOptions="actionDone" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView
             android:id="@+id/imageView_video"
@@ -452,7 +481,8 @@
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/viewPager" />
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout_image_description" />
+
 
         <Button
             android:id="@+id/button_validate"

@@ -7,14 +7,17 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.marginStart
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityLoaningBinding
+import com.openclassrooms.realestatemanager.main.PropertyListViewModel
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
 class LoaningActivity : AppCompatActivity() {
+    private val viewModel: LoaningViewModel by viewModels()
     private lateinit var amount: String
     private lateinit var rate: String
     private lateinit var down: String
@@ -65,14 +68,14 @@ class LoaningActivity : AppCompatActivity() {
     private fun buttonClick(){
         binding.buttonCalculate.setOnClickListener(View.OnClickListener {
             getInfoFromUi()
-            calculateMortgage()
+            calculateLoaning()
 
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
         })
     }
 
-    private fun calculateMortgage() {
+    private fun calculateLoaning() {
         val secureAmount: Double = if (amount.isNotEmpty()) amount.toDouble()
         else 0.0
         val secureRate: Double = if (rate.isNotEmpty()) rate.toDouble()
@@ -82,14 +85,9 @@ class LoaningActivity : AppCompatActivity() {
 
         Log.d("loan", "Mortgage: $amount + $rate")
         Log.d("loan", "calculateMortgage: $secureAmount + $secureRate")
-        if (secureAmount != 0.0 || secureRate != 0.0) {
-            val interest = secureRate / 100 / 12
-            val months = years.times(12)
-            val totalResult: Int = if (secureAmount == 0.0 || secureRate == 0.0) 0
-            else
-                (((secureAmount - secureDown) * (interest * (1 + interest).pow(months) / ((1 + interest).pow(months) - 1))) * months).roundToInt()
-
-            val monthlyResult: Int = totalResult / months
+        if (secureAmount != 0.0 && secureRate != 0.0 && years != 0) {
+            val totalResult: Int = viewModel.calculateTotalLoaning(secureRate, years, secureAmount, secureDown)
+            val monthlyResult: Int = viewModel.calculateMonthlyLoaning()
             binding.apply {
                 textViewTotalCoast.visibility = View.VISIBLE
                 textViewTotalCoastEmptyField.visibility = View.VISIBLE

@@ -41,12 +41,14 @@
     <string name="park">Park</string>
     <string name="transport">Public Transport</string>
     <string name="culture">Cultural Places</string>
-    <string name="add_photo_title">Adding Photo</string>
+    <string name="add_photo_title">Adding or Deleting Photos</string>
+    <string name="add_video_title">Adding or Deleting Videos</string>
     <string name="from_gallery">Select photos from gallery</string>
+    <string name="video_gallery">Select videos from gallery</string>
     <string name="shoot_photo">Shoot a photo</string>
     <string name="photo_message">With which method do you want to add photos</string>
-    <string name="add_photo">ADD PHOTO</string>
-    <string name="add_video">ADD VIDEO</string>
+    <string name="add_photo">ADD/DELETE \n PHOTOS</string>
+    <string name="add_video">ADD/DELETE\nVIDEO</string>
     <string name="validation_button">VALIDATE</string>
     <string name="title_property_list">Properties</string>
     <string name="title_property_detail">Property Detail</string>
@@ -56,8 +58,13 @@
     <string name="title_alertDialog">Creation/Update of propriety</string>
     <string name="enter_name">Enter the name of Agent</string>
     <string name="enter_name_error">You have to give your name</string>
+    <string name="photo_error">You have to add at least one photo</string>
+    <string name="image_description">Add a short description for each images</string>
+    <string name="delete_photo">Delete Photos</string>
+    <string name="delete_video">Delete Videos</string>
+    <string name="agent">Real Estate Agent:</string>
 
-    //Mortgage
+    //Loaning
     <string name="amount">Amount of your loan</string>
     <string name="down">Down payment</string>
     <string name="duration">Duration of your loan in years :</string>
@@ -70,7 +77,11 @@
     //Filter
     <string name="surface_between">Surface</string>
     <string name="min_room">Minimum Room and Bedroom</string>
-    <string name="filter">filter</string>
+    <string name="filter">Filter</string>
+    <string name="filter_title">Filter Properties</string>
+    <string name="no_filter">Reset Filter</string>
+    <string name="hide_sold">Hide sold properties</string>
+    <string name="show_sold">Show only sold properties</string>
 
     //Notification
     <string name="channel_description">Notification channel</string>
@@ -83,6 +94,7 @@
     <string name="menu_map">Map</string>
     <string name="menu_loan">Loaning</string>
     <string name="menu_new_property">Create A New Property</string>
+    <string name="menu_settings">Settings</string>
 
     //Content Description
     <string name="navigation_drawer_open">Open navigation drawer</string>

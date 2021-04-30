@@ -21,9 +21,9 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.detail.PropertyDetailActivity
 import com.openclassrooms.realestatemanager.detail.PropertyDetailFragment
-import com.openclassrooms.realestatemanager.main.PropertyListViewModel
-import com.openclassrooms.realestatemanager.main.PropertyListViewModelFactory
 import com.openclassrooms.realestatemanager.model.Property
+import com.openclassrooms.realestatemanager.propertylist.PropertyListViewModel
+import com.openclassrooms.realestatemanager.propertylist.PropertyListViewModelFactory
 import com.openclassrooms.realestatemanager.room.RealEstateApplication
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {

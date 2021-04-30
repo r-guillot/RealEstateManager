@@ -2,14 +2,12 @@ package com.openclassrooms.realestatemanager
 
 import android.content.Context
 import android.location.Geocoder
-import android.net.ConnectivityManager
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.openclassrooms.realestatemanager.utils.Utils
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.logging.ConsoleHandler
 
 
 /**

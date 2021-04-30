@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -45,7 +44,6 @@
         app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_house"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -55,7 +53,6 @@
             android:theme="@style/choice_chip" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_apartment"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -65,7 +62,6 @@
             android:theme="@style/choice_chip" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_land"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -244,7 +240,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textView_asset_property">
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_cellar"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -254,7 +249,6 @@
             android:theme="@style/little_choice_chip" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_parking"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -264,7 +258,6 @@
             android:theme="@style/little_choice_chip" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_garage"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -274,7 +267,6 @@
             android:theme="@style/little_choice_chip" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_garden"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -284,7 +276,6 @@
             android:theme="@style/little_choice_chip" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_view"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -294,7 +285,6 @@
             android:theme="@style/little_choice_chip" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_balcony"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -304,7 +294,6 @@
             android:theme="@style/little_choice_chip" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_pool"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -314,7 +303,6 @@
             android:theme="@style/little_choice_chip" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_elevator"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -351,7 +339,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textView_interest">
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_school"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -361,7 +348,6 @@
             android:theme="@style/little_choice_chip" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_bar"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -371,7 +357,6 @@
             android:theme="@style/little_choice_chip" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_local_commerce"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -381,7 +366,6 @@
             android:theme="@style/little_choice_chip" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_park"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -391,7 +375,6 @@
             android:theme="@style/little_choice_chip" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_transport"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -401,7 +384,6 @@
             android:theme="@style/little_choice_chip" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_cultural"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

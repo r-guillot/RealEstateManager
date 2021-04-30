@@ -1,11 +1,9 @@
 package com.openclassrooms.realestatemanager.model
 
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.android.gms.maps.model.LatLng
 
 @Entity(tableName = "property_items")
 data class Property(

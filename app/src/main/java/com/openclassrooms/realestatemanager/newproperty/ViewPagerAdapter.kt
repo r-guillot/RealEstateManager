@@ -2,10 +2,7 @@ package com.openclassrooms.realestatemanager.newproperty
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.media.MediaMetadataRetriever
 import android.net.Uri
-import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,10 +10,9 @@ import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
 import com.openclassrooms.realestatemanager.databinding.ItemViewpagerBinding
 import com.openclassrooms.realestatemanager.detail.FullScreenImage
-import java.io.File
 
 
-class ViewPagerAdapter(var list: List<Uri>, var context: Context, var width: Float, var photoDescription: List<String>?) : PagerAdapter() {
+class ViewPagerAdapter(var list: List<Uri>, var context: Context, var width: Float, private var photoDescription: List<String>?) : PagerAdapter() {
 
     override fun getCount(): Int {
         return list.size
@@ -26,6 +22,7 @@ class ViewPagerAdapter(var list: List<Uri>, var context: Context, var width: Flo
         return view == `object`
     }
 
+    //display photo and description from list to the view pager
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val binding = ItemViewpagerBinding.inflate(LayoutInflater.from(context), container, false)
         binding.root
@@ -53,6 +50,7 @@ class ViewPagerAdapter(var list: List<Uri>, var context: Context, var width: Flo
         return binding.root
     }
 
+    //depending on value of width, the viewPager will displayed one or two images
     override fun getPageWidth(position: Int): Float {
         return width
     }

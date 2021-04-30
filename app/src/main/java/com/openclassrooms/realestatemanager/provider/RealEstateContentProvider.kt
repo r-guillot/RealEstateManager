@@ -15,7 +15,8 @@ class RealEstateContentProvider : ContentProvider() {
         return true
     }
 
-    override fun query(uri: Uri, projection: Array<out String>?, selection: String?, selectionArgs: Array<out String>?, sortOrder: String?): Cursor? {
+    //query data from database
+    override fun query(uri: Uri, projection: Array<out String>?, selection: String?, selectionArgs: Array<out String>?, sortOrder: String?): Cursor {
         if (context != null) {
             val index = ContentUris.parseId(uri)
             val cursor = RealEstateDatabase.getDatabase(context!!).propertyDao().getPropertiesWithCursor(index.toInt())
@@ -42,7 +43,7 @@ class RealEstateContentProvider : ContentProvider() {
     }
 
     companion object {
-        val AUTHORITY = "com.openclassrooms.realestatemanager.provider"
+        const val AUTHORITY = "com.openclassrooms.realestatemanager.provider"
         private val TABLE_NAME = Property::class.java.simpleName
         val CONTENT_URI: Uri = Uri.parse("content://" + AUTHORITY + "/" +
                 TABLE_NAME)

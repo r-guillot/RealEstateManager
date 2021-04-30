@@ -2,20 +2,18 @@ package com.openclassrooms.realestatemanager.filter
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
 import com.openclassrooms.realestatemanager.utils.FragmentCallback
 import com.openclassrooms.realestatemanager.databinding.FragmentFilterBinding
-import com.openclassrooms.realestatemanager.main.PropertyListViewModel
-import com.openclassrooms.realestatemanager.main.PropertyListViewModelFactory
 import com.openclassrooms.realestatemanager.model.Property
+import com.openclassrooms.realestatemanager.propertylist.PropertyListViewModel
+import com.openclassrooms.realestatemanager.propertylist.PropertyListViewModelFactory
 import com.openclassrooms.realestatemanager.room.RealEstateApplication
 
 class FilterFragment : BottomSheetDialogFragment() {
@@ -36,16 +34,12 @@ class FilterFragment : BottomSheetDialogFragment() {
     private lateinit var priceMax: String
     private lateinit var filterList: MutableList<Property>
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
         binding = FragmentFilterBinding.inflate(layoutInflater)
 
-        viewModel.allProperty.observe(viewLifecycleOwner, Observer { properties ->
+        viewModel.allProperty.observe(viewLifecycleOwner, { properties ->
             getPropertyList(properties as MutableList<Property>)
         })
         getChipType()
@@ -85,12 +79,13 @@ class FilterFragment : BottomSheetDialogFragment() {
         }
     }
 
+    //reset the propertiesList if user delete the filters
     private fun onNoFilterButtonClick(){
-        binding.buttonNoFilter.setOnClickListener(View.OnClickListener {
-            viewModel.allProperty.observe(viewLifecycleOwner, Observer { properties ->
+        binding.buttonNoFilter.setOnClickListener {
+            viewModel.allProperty.observe(viewLifecycleOwner, { properties ->
                 getNoFilteredList(properties as MutableList<Property>)
             })
-        })
+        }
     }
 
     private fun getNoFilteredList(properties: MutableList<Property>){
@@ -99,10 +94,11 @@ class FilterFragment : BottomSheetDialogFragment() {
 
     }
 
+    //get filter info when user click on filter button
     private fun onFilterButtonClick() {
-        binding.buttonValidate.setOnClickListener(View.OnClickListener {
+        binding.buttonValidate.setOnClickListener {
             getFilterInfo()
-        })
+        }
     }
 
     private fun getFilterInfo() {
@@ -116,11 +112,13 @@ class FilterFragment : BottomSheetDialogFragment() {
             priceMin = editTextPriceMin.text.toString()
             priceMax = editTextPriceMax.text.toString()
         }
-        viewModel.allProperty.observe(viewLifecycleOwner, Observer { properties ->
+        viewModel.allProperty.observe(viewLifecycleOwner, { properties ->
             filterProperties(properties as MutableList<Property>)
         })
     }
 
+    //properties are filtered and add to filterList, only the filters with data are used
+    //at the end, filterList is sent to PropertyListActivity through callback
     private fun filterProperties(properties: MutableList<Property>) {
         filterList = properties
         if (surfaceMin.isNotEmpty() && surfaceMax.isNotEmpty() && filterList.isNotEmpty()) {

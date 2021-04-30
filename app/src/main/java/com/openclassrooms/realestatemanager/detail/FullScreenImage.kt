@@ -26,7 +26,6 @@ class FullScreenImage : AppCompatActivity() {
 
     private fun displayImage() {
         val imageUri: String? = intent.getStringExtra("image")
-        Log.d("FS", "displayImage: $imageUri")
         binding.imageViewFullscreen.setImageURI(imageUri?.toUri())
     }
 }

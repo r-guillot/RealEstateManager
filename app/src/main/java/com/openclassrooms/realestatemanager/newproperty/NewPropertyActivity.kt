@@ -5,7 +5,6 @@ import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.location.Geocoder
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
@@ -13,6 +12,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.InputType
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -27,14 +27,14 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.chip.ChipGroup
 import com.openclassrooms.realestatemanager.BuildConfig
-import com.openclassrooms.realestatemanager.utils.NotificationHelper
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.databinding.ActivityNewPropertyBinding
 import com.openclassrooms.realestatemanager.detail.PropertyDetailFragment
 import com.openclassrooms.realestatemanager.model.Property
 import com.openclassrooms.realestatemanager.propertylist.PropertyListActivity
 import com.openclassrooms.realestatemanager.room.RealEstateApplication
+import com.openclassrooms.realestatemanager.utils.NotificationHelper
+import com.openclassrooms.realestatemanager.utils.Utils
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -76,7 +76,7 @@ class NewPropertyActivity : AppCompatActivity() {
         if (intent.getStringExtra(PropertyDetailFragment.ARG_ITEM_ID) != null) {
             id = intent.getStringExtra(PropertyDetailFragment.ARG_ITEM_ID)
             edit = true
-            viewModel.allProperty.observe(this, androidx.lifecycle.Observer { properties ->
+            viewModel.allProperty.observe(this, { properties ->
                 getProperties(properties)
             })
         }
@@ -168,7 +168,9 @@ class NewPropertyActivity : AppCompatActivity() {
     //ActivityResult after shoot a photo, add it in photoListUri and display it in ViewPager
     private var resultCapturePhoto = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
+            Log.d("photo", "$photoURI")
             photoListUri.add(photoURI)
+            Log.d("photo", "${photoListUri.size} ")
             displaySelectedPhotoInViewPager()
         }
     }
@@ -183,9 +185,10 @@ class NewPropertyActivity : AppCompatActivity() {
             null
         }
         // Continue only if the File was successfully created
+        Log.d("photo", "$photoFile ")
         photoFile?.also {
             photoURI = FileProvider.getUriForFile(
-                    this, BuildConfig.APPLICATION_ID + ".provider", it)
+                    this, BuildConfig.APPLICATION_ID + ".fileprovider", it)
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
             resultCapturePhoto.launch(cameraIntent)
         }
@@ -228,6 +231,7 @@ class NewPropertyActivity : AppCompatActivity() {
         }
     }
 
+    //add description for added photo
     private fun addDescriptionForPhoto() {
         binding.textInputLayoutImageDescription.visibility = View.VISIBLE
         binding.textInputEditTextImageDescription.setOnEditorActionListener(OnEditorActionListener { textView, actionId, _ ->
@@ -401,8 +405,6 @@ class NewPropertyActivity : AppCompatActivity() {
 
     //get latitude and longitude of the property using its address
     private fun getCoordinatesFromAddress(address: String) {
-//        val cord = Geocoder(this)
-//        val addresses = cord.getFromLocationName(address, 1)
         val addresses = viewModel.getCord(address, this)
         propertyLat = addresses?.get(0)!!.latitude
         propertyLong = addresses[0].longitude
@@ -453,6 +455,8 @@ class NewPropertyActivity : AppCompatActivity() {
             chipTransport.isChecked = true; chipCultural.isChecked = true; chipHouse.isChecked = true
             chipLand.isChecked = true; chipApartment.isChecked = true
         }
+//        viewmodel.checkIds(var chipGroup)
+
         for (id in binding.chipGroupType.checkedChipIds) {
             val chip: Chip = binding.chipGroupType.findViewById(id)
             if (!property.type!!.contains(chip.text.toString())) {
@@ -476,7 +480,7 @@ class NewPropertyActivity : AppCompatActivity() {
                 val chip = Chip(this)
                 chip.text = description
                 binding.chipGroup.addView(chip)
-                chip.setOnClickListener(View.OnClickListener { binding.chipGroup.removeView(chip) })
+                chip.setOnClickListener { binding.chipGroup.removeView(chip) }
             } else {
                 binding.chipGroup.visibility = View.GONE
             }

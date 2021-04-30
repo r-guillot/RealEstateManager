@@ -1,16 +1,12 @@
-package com.openclassrooms.realestatemanager.main
+package com.openclassrooms.realestatemanager.propertylist
 
 import androidx.lifecycle.*
 import com.openclassrooms.realestatemanager.model.Property
 import com.openclassrooms.realestatemanager.newproperty.PropertyRepository
 
-class PropertyListViewModel(private val propertyRepository: PropertyRepository): ViewModel() {
+class PropertyListViewModel(propertyRepository: PropertyRepository): ViewModel() {
 
     val allProperty: LiveData<List<Property>> = propertyRepository.allProperties.asLiveData()
-
-    fun getProperty(int: Int): Property {
-        return propertyRepository.getProperty(int)
-    }
 }
 
 class PropertyListViewModelFactory(private val propertyRepository: PropertyRepository) : ViewModelProvider.Factory {

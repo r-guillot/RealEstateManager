@@ -9,16 +9,20 @@ import kotlinx.coroutines.launch
 
 class NewPropertyViewModel(private val propertyRepository: PropertyRepository): ViewModel() {
 
+    //get all properties
     val allProperty: LiveData<List<Property>> = propertyRepository.allProperties.asLiveData()
 
+    //insert new property
     fun insertNewProperty(property: Property)=viewModelScope.launch {
         propertyRepository.insertProperty(property)
     }
 
+    //update property
     fun updateProperty(property: Property)= viewModelScope.launch {
         propertyRepository.updateProperty(property)
     }
 
+    //get GPS cord from an address
     fun getCord(address: String, context: Context): MutableList<Address>? {
         val cord = Geocoder(context)
         return cord.getFromLocationName(address, 1)

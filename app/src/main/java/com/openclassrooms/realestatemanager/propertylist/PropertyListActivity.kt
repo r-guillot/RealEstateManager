@@ -3,15 +3,12 @@ package com.openclassrooms.realestatemanager.propertylist
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.widget.NestedScrollView
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.leinardi.android.speeddial.SpeedDialView
 import com.openclassrooms.realestatemanager.utils.FragmentCallback
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.utils.Utils
@@ -20,8 +17,6 @@ import com.openclassrooms.realestatemanager.detail.PropertyDetailActivity
 import com.openclassrooms.realestatemanager.detail.PropertyDetailFragment
 import com.openclassrooms.realestatemanager.filter.FilterFragment
 import com.openclassrooms.realestatemanager.loan.LoaningActivity
-import com.openclassrooms.realestatemanager.main.PropertyListViewModel
-import com.openclassrooms.realestatemanager.main.PropertyListViewModelFactory
 import com.openclassrooms.realestatemanager.map.MapsActivity
 import com.openclassrooms.realestatemanager.model.Property
 import com.openclassrooms.realestatemanager.newproperty.NewPropertyActivity
@@ -54,7 +49,7 @@ class PropertyListActivity : AppCompatActivity(), FragmentCallback {
         configureBinding()
         getProperties()
         checkForPermission()
-        goToNewPropertyActivity()
+        goToChosenActivity()
         filterFabClick()
 
         if (findViewById<NestedScrollView>(R.id.item_detail_container) != null) {
@@ -73,7 +68,7 @@ class PropertyListActivity : AppCompatActivity(), FragmentCallback {
     }
 
     private fun getProperties() {
-        viewModel.allProperty.observe(this, Observer { properties ->
+        viewModel.allProperty.observe(this, { properties ->
             configureRecycleView(properties)
         })
     }
@@ -81,12 +76,12 @@ class PropertyListActivity : AppCompatActivity(), FragmentCallback {
     private fun configureRecycleView(propertyList: List<Property>) {
         binding.propertyRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@PropertyListActivity)
-            adapter = PropertyListAdapter(propertyList, twoPane) { property -> itemClicked(property) }
+            adapter = PropertyListAdapter(propertyList) { property -> itemClicked(property) }
             if (twoPane && propertyList.isNotEmpty()){itemClicked(propertyList[0])}
-            if (propertyList.isNullOrEmpty()){}
         }
     }
 
+    //check for permission for location of user
     private fun checkForPermission() {
         if (Utils.hasInternetConnection(this)) {
             if (ActivityCompat.checkSelfPermission(this,
@@ -98,6 +93,7 @@ class PropertyListActivity : AppCompatActivity(), FragmentCallback {
         }
     }
 
+    //go to PropertyDetailActivity when an item is clicked
     private fun itemClicked(property: Property) {
         if (twoPane) {
             val fragment = PropertyDetailFragment().apply {
@@ -118,20 +114,21 @@ class PropertyListActivity : AppCompatActivity(), FragmentCallback {
     }
 
     private fun filterFabClick(){
-        binding.FABFilter.setOnClickListener(View.OnClickListener {
+        binding.FABFilter.setOnClickListener {
             FilterFragment().apply {
                 show(supportFragmentManager, FilterFragment.TAG)
             }
-        })
+        }
     }
 
     override fun onPropertyFiltered(mutableList: MutableList<Property>) {
         configureRecycleView(mutableList)
     }
 
-    private fun goToNewPropertyActivity() {
+    //select activity you want after clicked on speedDial button
+    private fun goToChosenActivity() {
         binding.speedDial.inflate(R.menu.fab_speed_dial_menu)
-        binding.speedDial.setOnActionSelectedListener(SpeedDialView.OnActionSelectedListener { actionItem ->
+        binding.speedDial.setOnActionSelectedListener { actionItem ->
             when (actionItem.id) {
                 R.id.action_new_property -> {
                     intent = Intent(this@PropertyListActivity, NewPropertyActivity::class.java)
@@ -151,7 +148,7 @@ class PropertyListActivity : AppCompatActivity(), FragmentCallback {
             }
             intent?.let { startActivity(it) }
             false
-        })
+        }
     }
 
     companion object {

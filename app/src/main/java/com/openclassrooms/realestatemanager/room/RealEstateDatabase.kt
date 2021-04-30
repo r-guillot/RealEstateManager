@@ -1,11 +1,11 @@
 package com.openclassrooms.realestatemanager.room
 
 import android.content.Context
-import androidx.room.*
-import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.openclassrooms.realestatemanager.model.Property
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Database(entities = [Property::class], version = 5)
 @TypeConverters(Converters::class)

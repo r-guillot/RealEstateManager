@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.RoomDatabaseTest
+package com.openclassrooms.realestatemanager.roomdatabasetest
 
 import android.content.Context
 import androidx.room.Room
@@ -25,8 +25,8 @@ import java.util.concurrent.Executors
 @RunWith(AndroidJUnit4::class)
 class PropertyDAOTest {
     private val appContext: Context = InstrumentationRegistry.getInstrumentation().targetContext
-    lateinit var database: RealEstateDatabase
-    lateinit var propertyDAO: PropertyDao
+    private lateinit var database: RealEstateDatabase
+    private lateinit var propertyDAO: PropertyDao
 
     @Before
     fun initDatabase() {

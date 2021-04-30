@@ -5,9 +5,10 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 
 class LoaningViewModel: ViewModel() {
-    var totalLoaningTResult: Int = 0
-    var months: Int = 0
+    private var totalLoaningTResult: Int = 0
+    private var months: Int = 0
 
+    //calculation for a loaning
     fun calculateTotalLoaning(secureRate: Double, years: Int, secureAmount: Double, secureDown: Double): Int{
         val interest = secureRate / 100 / 12
         months = years.times(12)

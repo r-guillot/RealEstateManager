@@ -18,14 +18,14 @@ import java.util.*
  */
 class ExampleUnitTest {
     private var amount = 10
-    lateinit var loaningViewModel: LoaningViewModel
-    lateinit var filterViewModel: FilterViewModel
+    private lateinit var loaningViewModel: LoaningViewModel
+    private lateinit var filterViewModel: FilterViewModel
     private val years = 20
     private val loanAmount = 300000.0
     private val rate = 1.34
     private val expectedTotalResult = 342160
     private val expectedMonthlyResult = 1425
-    lateinit var propertiesList: MutableList<Property>
+    private lateinit var propertiesList: MutableList<Property>
 
     @Before
     fun setUp(){

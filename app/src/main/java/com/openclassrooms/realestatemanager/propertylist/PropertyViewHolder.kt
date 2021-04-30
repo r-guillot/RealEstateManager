@@ -10,6 +10,7 @@ import com.openclassrooms.realestatemanager.model.Property
 
 class PropertyViewHolder(private var binding: ItemPropertyBinding, private val onClickListener: (Property) -> Unit) : RecyclerView.ViewHolder(binding.root) {
 
+    //update recyclerView item with data from property
     fun updatePropertyInfo(property: Property) {
         val imageUri: Uri? = property.photo?.get(0)
 

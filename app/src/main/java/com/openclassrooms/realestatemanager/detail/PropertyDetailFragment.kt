@@ -3,55 +3,49 @@ package com.openclassrooms.realestatemanager.detail
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.view.*
-import android.view.ViewTreeObserver.OnScrollChangedListener
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.MediaController
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.chip.Chip
-import com.openclassrooms.realestatemanager.utils.OnMapAndViewReadyListener
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.databinding.PropertyDetailBinding
-import com.openclassrooms.realestatemanager.main.PropertyListViewModel
-import com.openclassrooms.realestatemanager.main.PropertyListViewModelFactory
 import com.openclassrooms.realestatemanager.model.Property
 import com.openclassrooms.realestatemanager.newproperty.NewPropertyActivity
 import com.openclassrooms.realestatemanager.newproperty.ViewPagerAdapter
+import com.openclassrooms.realestatemanager.propertylist.PropertyListViewModel
+import com.openclassrooms.realestatemanager.propertylist.PropertyListViewModelFactory
 import com.openclassrooms.realestatemanager.room.RealEstateApplication
+import com.openclassrooms.realestatemanager.utils.OnMapAndViewReadyListener
+import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.utils.checkIfEmpty
 
 
 /**
  * A fragment representing a single Property detail screen.
- * This fragment is either contained in a [PropertyListActivity]
+ * This fragment is either contained in a PropertyListActivity
  * in two-pane mode (on tablets) or a [PropertyDetailActivity]
  * on handsets.
  */
 class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLayoutAndMapReadyListener {
-    private val TAG = PropertyDetailFragment::class.qualifiedName
     private val viewModel: PropertyListViewModel by viewModels {
         PropertyListViewModelFactory((activity?.application as RealEstateApplication).propertyRepository)
     }
-
     private lateinit var binding: PropertyDetailBinding
-
-        private var propertyMap: Property? = null
+    private var propertyMap: Property? = null
     private lateinit var map: GoogleMap
     private lateinit var mapFragment: SupportMapFragment
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = PropertyDetailBinding.inflate(layoutInflater)
-
         binding.viewPager.requestFocus()
         mapFragment = childFragmentManager.findFragmentById(R.id.googleMap) as SupportMapFragment
         OnMapAndViewReadyListener(mapFragment, this)
@@ -59,6 +53,7 @@ class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLay
         return binding.root
     }
 
+    //get all properties and check if contains the chosen property
     private fun getProperties(propertyList: List<Property>) {
         val property = propertyList.find { it.id == arguments?.getString(ARG_ITEM_ID)?.toInt() }
         property?.let { updateUi(it) }
@@ -68,7 +63,7 @@ class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLay
         super.onViewCreated(view, savedInstanceState)
         arguments?.let {
             if (it.containsKey(ARG_ITEM_ID)) {
-                viewModel.allProperty.observe(viewLifecycleOwner, Observer { properties ->
+                viewModel.allProperty.observe(viewLifecycleOwner, { properties ->
                     getProperties(properties)
                 })
             }
@@ -76,6 +71,7 @@ class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLay
         editProperty()
     }
 
+    //Update UI with property info
     private fun updateUi(property: Property) {
         this.propertyMap = property
         binding.apply {
@@ -99,6 +95,7 @@ class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLay
                 binding.videoView.visibility = View.GONE
             }
 
+            // add filter on viewPager if the property is sold
             if (property.sold) {
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                     binding.viewPager.foreground = ResourcesCompat.getDrawable(binding.root.resources, R.drawable.ic_sold, null)
@@ -117,6 +114,7 @@ class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLay
         }
     }
 
+    //Add asset and point of interest in chipGroup
     private fun addAsset(assetList: MutableList<String>) {
         val chipGroup = binding.chipGroupAsset
         chipGroup.removeAllViews()
@@ -147,10 +145,11 @@ class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLay
         }
     }
 
+    //Show property position if the user has an internet connection
     private fun showPropertyPosition(property: Property) {
         if (!::map.isInitialized) return
 
-        if ( propertyMap != null && Utils.hasInternetConnection(context)) {
+        if (propertyMap != null && Utils.hasInternetConnection(context)) {
             val propertyPosition = LatLng(property.propertyLat, property.propertyLong)
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(propertyPosition, 15f))
             map.addMarker(
@@ -169,24 +168,27 @@ class PropertyDetailFragment : Fragment(), OnMapAndViewReadyListener.OnGlobalLay
         propertyMap?.let { showPropertyPosition(it) }
     }
 
+    //display video if agent add one when he create the property
+    //hide the view if no video exist
     private fun displayVideo(videoUri: Uri) {
         val videoView = binding.videoView
         val mediaController = MediaController(context)
         mediaController.setAnchorView(videoView)
-        binding.root.viewTreeObserver.addOnScrollChangedListener(OnScrollChangedListener { mediaController.hide() })
+        binding.root.viewTreeObserver.addOnScrollChangedListener { mediaController.hide() }
         videoView.visibility = View.VISIBLE
         videoView.setMediaController(mediaController)
         videoView.setVideoURI(videoUri)
         videoView.seekTo(1)
     }
 
-    private fun editProperty(){
-        binding.FABEdit.setOnClickListener(View.OnClickListener {
+    //mini floating action button for edited the property
+    private fun editProperty() {
+        binding.FABEdit.setOnClickListener {
             val intent = Intent(activity, NewPropertyActivity::class.java).apply {
                 putExtra(NewPropertyActivity.ARG_ITEM_ID, propertyMap?.id.toString())
             }
             startActivity(intent)
-        })
+        }
     }
 
     companion object {

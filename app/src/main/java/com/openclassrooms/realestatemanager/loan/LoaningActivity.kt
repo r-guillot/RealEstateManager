@@ -6,15 +6,10 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.SeekBar
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.marginStart
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityLoaningBinding
-import com.openclassrooms.realestatemanager.main.PropertyListViewModel
-import kotlin.math.pow
-import kotlin.math.roundToInt
 
 class LoaningActivity : AppCompatActivity() {
     private val viewModel: LoaningViewModel by viewModels()
@@ -22,7 +17,6 @@ class LoaningActivity : AppCompatActivity() {
     private lateinit var rate: String
     private lateinit var down: String
     var years: Int = 0
-
     lateinit var binding: ActivityLoaningBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,12 +34,14 @@ class LoaningActivity : AppCompatActivity() {
         setContentView(view)
     }
 
+    //get values from editText
     private fun getInfoFromUi(){
         amount= binding.editTextAmount.text.toString()
         rate = binding.editTextRate.text.toString()
         down = binding.editTextDown.text.toString()
     }
 
+    //get years from seekBar
     private fun getSeekBar(){
         binding.seekBarYears.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             var progressChangeValue = 0
@@ -59,22 +55,22 @@ class LoaningActivity : AppCompatActivity() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 years = progressChangeValue
-                Toast.makeText(this@LoaningActivity, "Seek bar progress is :" + progressChangeValue,
-                        Toast.LENGTH_SHORT).show();
             }
         })
     }
 
     private fun buttonClick(){
-        binding.buttonCalculate.setOnClickListener(View.OnClickListener {
+        binding.buttonCalculate.setOnClickListener {
             getInfoFromUi()
             calculateLoaning()
 
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
-        })
+        }
     }
 
+    //check if entry are not empty, if they are we can't calculate the loan except for the down
+    //show the result for total loaning cost and monthly loan
     private fun calculateLoaning() {
         val secureAmount: Double = if (amount.isNotEmpty()) amount.toDouble()
         else 0.0
@@ -83,8 +79,6 @@ class LoaningActivity : AppCompatActivity() {
         val secureDown: Double = if (down.isNotEmpty()) down.toDouble()
         else 0.0
 
-        Log.d("loan", "Mortgage: $amount + $rate")
-        Log.d("loan", "calculateMortgage: $secureAmount + $secureRate")
         if (secureAmount != 0.0 && secureRate != 0.0 && years != 0) {
             val totalResult: Int = viewModel.calculateTotalLoaning(secureRate, years, secureAmount, secureDown)
             val monthlyResult: Int = viewModel.calculateMonthlyLoaning()

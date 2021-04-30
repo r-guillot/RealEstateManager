@@ -20,8 +20,4 @@ class PropertyRepository(private val propertyDao: PropertyDao) {
     suspend fun updateProperty(property: Property){
         propertyDao.updateProperty(property)
     }
-
-    fun getProperty(int: Int): Property {
-       return propertyDao.findById(int)
-    }
 }

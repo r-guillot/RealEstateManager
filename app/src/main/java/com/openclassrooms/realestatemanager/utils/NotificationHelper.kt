@@ -16,6 +16,7 @@ class NotificationHelper {
     lateinit var context: Context
     private lateinit var pendingIntent: PendingIntent
 
+    //creation on notificationChannel, called in newPropertyActivity
     fun createNotificationChannel(context: Context) {
         this.context = context
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -34,6 +35,7 @@ class NotificationHelper {
         }
     }
 
+    //show notification after the creation of a new property
     fun showNotification() {
         configureNotificationIntent()
         val builder = NotificationCompat.Builder(context, context.getString(R.string.notificationChannel))

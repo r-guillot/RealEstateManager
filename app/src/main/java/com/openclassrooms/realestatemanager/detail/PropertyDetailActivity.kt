@@ -19,9 +19,6 @@ class PropertyDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_property_detail)
 
-        // Show the Up button in the action bar.
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
         // (e.g. when rotating the screen from portrait to landscape).
@@ -46,19 +43,4 @@ class PropertyDetailActivity : AppCompatActivity() {
                     .commit()
         }
     }
-
-    override fun onOptionsItemSelected(item: MenuItem) =
-            when (item.itemId) {
-                android.R.id.home -> {
-                    // This ID represents the Home or Up button. In the case of this
-                    // activity, the Up button is shown. For
-                    // more details, see the Navigation pattern on Android Design:
-                    //
-                    // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-
-                    navigateUpTo(Intent(this, PropertyListActivity::class.java))
-                    true
-                }
-                else -> super.onOptionsItemSelected(item)
-            }
 }

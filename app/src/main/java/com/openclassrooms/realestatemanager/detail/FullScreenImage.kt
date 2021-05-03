@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.detail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.core.net.toUri
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityFullScreenImageBinding

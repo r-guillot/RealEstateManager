@@ -35,6 +35,7 @@ import com.openclassrooms.realestatemanager.propertylist.PropertyListActivity
 import com.openclassrooms.realestatemanager.room.RealEstateApplication
 import com.openclassrooms.realestatemanager.utils.NotificationHelper
 import com.openclassrooms.realestatemanager.utils.Utils
+import com.openclassrooms.realestatemanager.utils.ViewHelper
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -118,7 +119,7 @@ class NewPropertyActivity : AppCompatActivity() {
     }
 
     //ActivityResult after getting pictures in gallery(one or multiple) and display them in ViewPager
-    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val clipData: ClipData? = result.data?.clipData
             if (clipData != null) {
@@ -306,7 +307,7 @@ class NewPropertyActivity : AppCompatActivity() {
                 }
                 setNegativeButton(resources.getString(R.string.delete_video)) { dialog, _ ->
                     videoUri = null
-                    binding.imageViewVideo.visibility = View.VISIBLE
+                    binding.imageViewVideo.visibility = View.GONE
                     dialog.dismiss()
                 }
                 create()
@@ -452,29 +453,14 @@ class NewPropertyActivity : AppCompatActivity() {
             chipGarden.isChecked = true; chipView.isChecked = true; chipBalcony.isChecked = true
             chipPool.isChecked = true; chipElevator.isChecked = true; chipSchool.isChecked = true
             chipBar.isChecked = true;chipLocalCommerce.isChecked = true; chipPark.isChecked = true
-            chipTransport.isChecked = true; chipCultural.isChecked = true; chipHouse.isChecked = true
-            chipLand.isChecked = true; chipApartment.isChecked = true
+            chipTransport.isChecked = true; chipCultural.isChecked = true
         }
-//        viewmodel.checkIds(var chipGroup)
+        ViewHelper.checkSelectedType(property, binding.chipHouse)
+        ViewHelper.checkSelectedType(property, binding.chipApartment)
+        ViewHelper.checkSelectedType(property, binding.chipLand)
+       ViewHelper.checkOnlySelectedChips(binding.chipGroupAsset, property.asset)
+        ViewHelper.checkOnlySelectedChips(binding.chipGroupInterest, property.pointOfInterest)
 
-        for (id in binding.chipGroupType.checkedChipIds) {
-            val chip: Chip = binding.chipGroupType.findViewById(id)
-            if (!property.type!!.contains(chip.text.toString())) {
-                chip.isChecked = false
-            }
-        }
-        for (id in binding.chipGroupAsset.checkedChipIds) {
-            val chip: Chip = binding.chipGroupAsset.findViewById(id)
-            if (!property.asset!!.contains(chip.text.toString())) {
-                chip.isChecked = false
-            }
-        }
-        for (id in binding.chipGroupInterest.checkedChipIds) {
-            val chip: Chip = binding.chipGroupInterest.findViewById(id)
-            if (!property.pointOfInterest!!.contains(chip.text.toString())) {
-                chip.isChecked = false
-            }
-        }
         for (description in property.descriptionPhoto!!) {
             if (description.isNotEmpty()) {
                 val chip = Chip(this)
@@ -486,7 +472,6 @@ class NewPropertyActivity : AppCompatActivity() {
             }
         }
     }
-
     companion object {
         /**
          * The fragment argument representing the item ID that this fragment

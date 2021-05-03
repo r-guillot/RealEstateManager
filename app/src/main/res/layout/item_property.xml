@@ -13,6 +13,7 @@
         android:layout_height="200dp"
         android:layout_margin="10dp"
         android:scaleType="centerCrop"
+        android:contentDescription="@string/cd_property_photo"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp" />
 

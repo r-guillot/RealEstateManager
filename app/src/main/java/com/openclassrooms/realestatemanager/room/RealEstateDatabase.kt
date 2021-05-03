@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.openclassrooms.realestatemanager.model.Property
 
-@Database(entities = [Property::class], version = 5)
+@Database(entities = [Property::class], version = 6)
 @TypeConverters(Converters::class)
 abstract class RealEstateDatabase : RoomDatabase() {
     abstract fun propertyDao(): PropertyDao

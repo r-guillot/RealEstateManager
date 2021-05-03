@@ -16,7 +16,8 @@
             android:id="@+id/imageView_viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/cd_property_photo"/>
 
     </RelativeLayout>
 

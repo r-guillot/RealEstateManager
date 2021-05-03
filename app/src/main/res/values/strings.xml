@@ -59,7 +59,7 @@
     <string name="image_description">Add a short description for each images</string>
     <string name="delete_photo">Delete Photos</string>
     <string name="delete_video">Delete Videos</string>
-    <string name="agent">Real Estate Agent:</string>
+    <string name="agent">Real Estate Agent</string>
 
     //Loaning
     <string name="amount">Amount of your loan</string>
@@ -90,5 +90,10 @@
     <string name="menu_new_property">Create A New Property</string>
 
     //Content Description
+    <string name="cd_fullscreen">fullscreen property image</string>
+    <string name="cd_thumbnail">thumbnail of video</string>
+    <string name="cd_property_photo">property photo</string>
+    <string name="cd_filter_button">filter button</string>
+    <string name="cd_edit_button">edit button</string>
 
 </resources>

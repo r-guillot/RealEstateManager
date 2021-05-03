@@ -1,11 +1,9 @@
 package com.openclassrooms.realestatemanager.detail
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import android.view.MenuItem
-import com.openclassrooms.realestatemanager.propertylist.PropertyListActivity
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.propertylist.PropertyListActivity
 
 /**
  * An activity representing a single Property detail screen. This

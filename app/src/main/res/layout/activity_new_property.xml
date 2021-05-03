@@ -469,8 +469,8 @@
                 android:layout_margin="10dp"
                 android:background="@android:color/transparent"
                 android:hint="@string/image_description"
-                android:inputType="text"
-                android:imeOptions="actionDone" />
+                android:imeOptions="actionDone"
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView
@@ -478,6 +478,7 @@
             android:layout_width="wrap_content"
             android:layout_height="100dp"
             android:visibility="gone"
+            android:contentDescription="@string/cd_thumbnail"
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

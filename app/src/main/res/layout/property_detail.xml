@@ -19,6 +19,7 @@
             app:fabSize ="mini"
             android:src="@drawable/ic_baseline_create_24"
             app:backgroundTint="@color/lightBlue"
+            android:contentDescription="@string/cd_edit_button"
 
             app:layout_constraintTop_toTopOf="parent"
             app:sdMainFabClosedSrc="@drawable/ic_baseline_add_24" />
@@ -183,6 +184,20 @@
             app:layout_constraintTop_toBottomOf="@+id/textView_interest" />
 
         <TextView
+            android:id="@+id/textView_description_title"
+            style="@style/title_string"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="10dp"
+
+            android:text="@string/description"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chipGroup_interest" />
+
+        <TextView
             android:id="@+id/textView_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -192,7 +207,7 @@
             android:textSize="15sp"
 
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chipGroup_interest" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_description_title" />
 
         <TextView
             android:id="@+id/textView_agent_title"
@@ -213,10 +228,10 @@
             android:layout_height="wrap_content"
             android:textColor="@color/dark"
             android:textSize="15sp"
+            android:layout_marginStart="10dp"
 
-            app:layout_constraintBottom_toBottomOf="@+id/textView_agent_title"
-            app:layout_constraintStart_toEndOf="@+id/textView_agent_title"
-            app:layout_constraintTop_toTopOf="@+id/textView_agent_title" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_agent_title"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/textView_property_online_date"

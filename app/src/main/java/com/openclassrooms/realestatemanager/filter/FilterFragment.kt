@@ -142,7 +142,6 @@ class FilterFragment : BottomSheetDialogFragment() {
         if (!interestList.isNullOrEmpty() && filterList.isNotEmpty()) {
             filterList = filterViewModel.filterInterest(filterList, interestList)
         }
-        Toast.makeText(activity, filterList.size.toString(), Toast.LENGTH_SHORT).show()
         fragmentCallback.onPropertyFiltered(filterList)
         requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
     }

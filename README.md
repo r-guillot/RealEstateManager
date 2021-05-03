@@ -32,7 +32,7 @@ Follow this link if you are not familiar with Googlekeys : https://developers.go
 <img src="https://github.com/r-guillot/RealEstateManager/blob/master/screenshot/loan.jpg" width="250" height="500">
 
 ### Application worked on phone and tablet
-<img src="https://github.com/r-guillot/RealEstateManager/blob/master/screenshot/tablet_display.png" width="500" height="300">
+<img src="https://github.com/r-guillot/RealEstateManager/blob/master/screenshot/display_tablet.png" width="500" height="300">
 
 ## App Architecture
 - MVVM

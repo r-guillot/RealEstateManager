@@ -41,7 +41,6 @@ class ViewPagerAdapter(var list: List<Uri>, var context: Context, var width: Flo
             if (!list[position].path.isNullOrEmpty()) {
                 val intent = Intent(context, FullScreenImage::class.java).apply {
                     putExtra("image", list[position].toString())
-                    Log.d("FS", "intent: " + list[position])
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }
                 context.startActivity(intent)

@@ -169,9 +169,7 @@ class NewPropertyActivity : AppCompatActivity() {
     //ActivityResult after shoot a photo, add it in photoListUri and display it in ViewPager
     private var resultCapturePhoto = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            Log.d("photo", "$photoURI")
             photoListUri.add(photoURI)
-            Log.d("photo", "${photoListUri.size} ")
             displaySelectedPhotoInViewPager()
         }
     }
@@ -186,7 +184,6 @@ class NewPropertyActivity : AppCompatActivity() {
             null
         }
         // Continue only if the File was successfully created
-        Log.d("photo", "$photoFile ")
         photoFile?.also {
             photoURI = FileProvider.getUriForFile(
                     this, BuildConfig.APPLICATION_ID + ".fileprovider", it)
@@ -202,7 +199,6 @@ class NewPropertyActivity : AppCompatActivity() {
                 Locale.getDefault()).format(Date())
         val imageFileName = "IMG_" + timeStamp + "_"
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        //        imageFilePath = image.absolutePath
         val image = File.createTempFile(imageFileName,  /* prefix */".jpg",  /* suffix */
                 storageDir /* directory */)
         imageFilePath = image.absolutePath

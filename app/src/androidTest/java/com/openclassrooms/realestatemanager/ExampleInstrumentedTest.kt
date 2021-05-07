@@ -19,8 +19,8 @@ import org.junit.runner.RunWith
 class ExampleInstrumentedTest {
     private val appContext: Context = InstrumentationRegistry.getInstrumentation().targetContext
     private val address = "Cathédrale Notre-dame de Paris"
-    private val lat = 48.8527288
-    private val long = 2.3505635
+    private val lat = 48.85296820000001
+    private val long = 2.3499021
 
     @Test
     fun checkIfConnexionToInternetExist() {
@@ -36,7 +36,7 @@ class ExampleInstrumentedTest {
     fun checkIfCoordinateForAddress() {
         val cord = Geocoder(appContext)
         val addresses = cord.getFromLocationName(address, 1)
-        println(addresses[0].latitude  )
+        println(addresses[0].latitude)
         println(addresses[0].longitude)
         Assert.assertTrue(addresses[0].latitude == lat)
         Assert.assertTrue(addresses[0].longitude == long)

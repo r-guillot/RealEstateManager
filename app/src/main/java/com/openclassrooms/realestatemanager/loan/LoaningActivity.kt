@@ -23,8 +23,20 @@ class LoaningActivity : AppCompatActivity() {
         setContentView(R.layout.activity_loaning)
 
         configureBinding()
+        configureActionBar()
         getSeekBar()
         buttonClick()
+    }
+
+    private fun configureActionBar(){
+        val actionbar = supportActionBar
+        //set back button
+        actionbar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun configureBinding() {

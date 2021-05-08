@@ -17,7 +17,7 @@ interface PropertyDao {
     @Query("SELECT * FROM property_items WHERE id LIKE :id")
     fun findById(id: Int): Property
 
-    @Query("SELECT * FROM property_items WHERE id = :id")
+    @Query("SELECT * FROM property_items WHERE id LIKE :id")
     fun getPropertiesWithCursor(id: Int): Cursor
 
     @Insert
@@ -25,4 +25,7 @@ interface PropertyDao {
 
     @Update
     suspend fun updateProperty(vararg property: Property)
+
+    @Query("DELETE FROM property_items WHERE id LIKE :id")
+    suspend fun deletePropertyById(id: Int)
 }

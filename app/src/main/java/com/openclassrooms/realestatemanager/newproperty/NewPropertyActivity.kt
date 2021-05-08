@@ -1,10 +1,12 @@
 package com.openclassrooms.realestatemanager.newproperty
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.ColorDrawable
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
@@ -12,10 +14,10 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.InputType
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -33,9 +35,7 @@ import com.openclassrooms.realestatemanager.detail.PropertyDetailFragment
 import com.openclassrooms.realestatemanager.model.Property
 import com.openclassrooms.realestatemanager.propertylist.PropertyListActivity
 import com.openclassrooms.realestatemanager.room.RealEstateApplication
-import com.openclassrooms.realestatemanager.utils.NotificationHelper
-import com.openclassrooms.realestatemanager.utils.Utils
-import com.openclassrooms.realestatemanager.utils.ViewHelper
+import com.openclassrooms.realestatemanager.utils.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -67,10 +67,13 @@ class NewPropertyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         configureBinding()
+        configureActionBar()
         notification.createNotificationChannel(this)
         getChipType()
         getOrTakePhoto()
         getVideo()
+        onArrivalDateClick()
+        onSoldDateClick()
         validation()
 
         //check if we receive an intent with extra, if it's yes this is an update so edit become true
@@ -81,6 +84,19 @@ class NewPropertyActivity : AppCompatActivity() {
                 getProperties(properties)
             })
         }
+    }
+
+    private fun configureActionBar() {
+        val actionbar = supportActionBar
+        //set back button
+        actionbar?.setBackgroundDrawable(ColorDrawable(0x00ff0000))
+        actionbar?.setDisplayShowTitleEnabled(false)
+        actionbar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun configureBinding() {
@@ -319,6 +335,35 @@ class NewPropertyActivity : AppCompatActivity() {
         }
     }
 
+    //Select date for creationDate
+    private fun onArrivalDateClick() {
+        binding.textViewCreationDate.setOnClickListener {
+            openDatePicker(binding.textViewCreationDatePicker)
+        }
+    }
+
+    //Select sold for creationDate
+    private fun onSoldDateClick() {
+        binding.textViewSoldDate.setOnClickListener {
+            openDatePicker(binding.textViewSoldDatePicker)
+        }
+    }
+
+    //Open datePicker and display the date in textView
+    private fun openDatePicker(editTextCreationDate: TextView) {
+        val calendar = Calendar.getInstance()
+        val year = calendar[Calendar.YEAR]
+        val month = calendar[Calendar.MONTH]
+        val day = calendar[Calendar.DAY_OF_MONTH]
+        val dpd = DatePickerDialog(this, { _, year1, monthOfYear, dayOfMonth ->
+            // Display Selected date in TextView
+            val date = "${dayOfMonth.twoNumberFormat()}/${monthOfYear.twoNumberFormat()}/$year1"
+            editTextCreationDate.text = date
+        }, year, month, day)
+        dpd.show()
+
+    }
+
     //AlertDialog after button pressed, we ask for the name of the agent,
     // if he don't give it, he can't create a new Property
     private fun validation() {
@@ -365,7 +410,6 @@ class NewPropertyActivity : AppCompatActivity() {
         getChipInterest()
         getChipDescription()
         checkIfPropertyIsSold()
-        val currentDate = Utils.getTodayDate()
 
         val id = (System.currentTimeMillis() / 1000).toInt()
         val address = binding.editTextAddress.text.toString()
@@ -375,6 +419,8 @@ class NewPropertyActivity : AppCompatActivity() {
         val bathrooms = binding.editTextBathroom.text.toString()
         val price = binding.editTextPrice.text.toString()
         val description = binding.editTextDescription.text.toString()
+        val creationDate = binding.textViewCreationDatePicker.text.toString()
+        val soldDate = binding.textViewSoldDatePicker.text.toString()
         val asset = assetList
         val interest = interestList
         val type = typeChoice.toString()
@@ -382,19 +428,19 @@ class NewPropertyActivity : AppCompatActivity() {
         val photoDescription = descriptionPhotoList
         val video = videoUri
         val sold = soldState
-        if (address.isNotEmpty()) {
+        if (address.isNotEmpty() && address.isNotBlank()) {
             getCoordinatesFromAddress(address)
         }
 
         //Check if it's a creation or an update
         if (!update) {
             val property = Property(id, type, price, surface, rooms, bedrooms, bathrooms, description,
-                    photo, photoDescription, video, address, asset, interest, sold, soldDate, currentDate, agent, propertyLat, propertyLong)
+                    photo, photoDescription, video, address, asset, interest, sold, soldDate, creationDate, agent, propertyLat, propertyLong)
             viewModel.insertNewProperty(property)
             notification.showNotification()
         } else {
             val propertyEdit = Property(propertyEdited.id, type, price, surface, rooms, bedrooms, bathrooms, description,
-                    photo, photoDescription, video, address, asset, interest, sold, soldDate, propertyEdited.arrivalDate, propertyEdited.agent, propertyLat, propertyLong)
+                    photo, photoDescription, video, address, asset, interest, sold, soldDate, creationDate, propertyEdited.agent, propertyLat, propertyLong)
             viewModel.updateProperty(propertyEdit)
         }
         startActivity(Intent(this, PropertyListActivity::class.java))
@@ -454,7 +500,7 @@ class NewPropertyActivity : AppCompatActivity() {
         ViewHelper.checkSelectedType(property, binding.chipHouse)
         ViewHelper.checkSelectedType(property, binding.chipApartment)
         ViewHelper.checkSelectedType(property, binding.chipLand)
-       ViewHelper.checkOnlySelectedChips(binding.chipGroupAsset, property.asset)
+        ViewHelper.checkOnlySelectedChips(binding.chipGroupAsset, property.asset)
         ViewHelper.checkOnlySelectedChips(binding.chipGroupInterest, property.pointOfInterest)
 
         for (description in property.descriptionPhoto!!) {
@@ -468,6 +514,7 @@ class NewPropertyActivity : AppCompatActivity() {
             }
         }
     }
+
     companion object {
         /**
          * The fragment argument representing the item ID that this fragment

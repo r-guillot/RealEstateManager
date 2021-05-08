@@ -128,6 +128,52 @@
             app:switchPadding="10dp" />
 
         <TextView
+            android:id="@+id/textView_sold_date"
+            style="@style/title_string"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/sold_date"
+            android:drawablePadding="5dp"
+            app:drawableEndCompat="@drawable/ic_baseline_calendar_today_24"
+
+            app:layout_constraintStart_toStartOf="@id/switch_sold"
+            app:layout_constraintTop_toBottomOf="@id/switch_sold" />
+
+        <TextView
+            android:id="@+id/textView_sold_datePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+
+            app:layout_constraintTop_toBottomOf="@+id/textView_sold_date"
+            app:layout_constraintStart_toStartOf="@id/textView_sold_date" />
+
+        <TextView
+            android:id="@+id/textView_creation_date"
+            style="@style/title_string"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="@string/creation_date"
+            android:drawablePadding="5dp"
+            app:drawableEndCompat="@drawable/ic_baseline_calendar_today_24"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/switch_sold"/>
+
+        <TextView
+            android:id="@+id/textView_creation_datePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+
+            app:layout_constraintStart_toStartOf="@id/textView_creation_date"
+            app:layout_constraintTop_toBottomOf="@+id/textView_creation_date" />
+
+        <TextView
             android:id="@+id/textView_description"
             style="@style/title_string"
             android:layout_width="match_parent"
@@ -138,7 +184,7 @@
             android:text="@string/description"
 
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText_price" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_creation_datePicker" />
 
         <EditText
             android:id="@+id/editText_description"

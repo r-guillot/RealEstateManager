@@ -5,7 +5,7 @@ import android.content.ContentUris
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
-import com.openclassrooms.realestatemanager.model.Property
+import com.openclassrooms.realestatemanager.BuildConfig
 import com.openclassrooms.realestatemanager.room.RealEstateDatabase
 
 class RealEstateContentProvider : ContentProvider() {
@@ -16,7 +16,7 @@ class RealEstateContentProvider : ContentProvider() {
     }
 
     //query data from database
-    override fun query(uri: Uri, projection: Array<out String>?, selection: String?, selectionArgs: Array<out String>?, sortOrder: String?): Cursor {
+    override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor {
         if (context != null) {
             val index = ContentUris.parseId(uri)
             val cursor = RealEstateDatabase.getDatabase(context!!).propertyDao().getPropertiesWithCursor(index.toInt())
@@ -26,8 +26,8 @@ class RealEstateContentProvider : ContentProvider() {
         throw IllegalArgumentException("Failed to query row for uri $uri")
     }
 
-    override fun getType(uri: Uri): String {
-        return "vnd.android.cursor.item/$AUTHORITY.$TABLE_NAME"
+    override fun getType(uri: Uri): String? {
+        return null
     }
 
     override fun insert(uri: Uri, values: ContentValues?): Uri? {
@@ -43,10 +43,9 @@ class RealEstateContentProvider : ContentProvider() {
     }
 
     companion object {
-        const val AUTHORITY = "com.openclassrooms.realestatemanager.provider"
-        private val TABLE_NAME = Property::class.java.simpleName
-        val CONTENT_URI: Uri = Uri.parse("content://" + AUTHORITY + "/" +
-                TABLE_NAME)
+        private const val AUTHORITY = "${BuildConfig.APPLICATION_ID}.provider"
+        private const val TABLE_NAME = "property_items"
+        val URI_PROPERTY: Uri = Uri.parse("content://$AUTHORITY/$TABLE_NAME")
     }
 
 }

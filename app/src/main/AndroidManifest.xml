@@ -31,16 +31,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".loan.LoaningActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".loan.LoaningActivity" />
         <activity
             android:name=".map.MapsActivity"
-            android:label="@string/title_activity_maps"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_maps" />
         <activity
             android:name=".detail.FullScreenImage"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".propertylist.PropertyListActivity"
             android:label="Real Estate Manager"
@@ -54,19 +51,17 @@
         <activity
             android:name=".detail.PropertyDetailActivity"
             android:label="@string/title_property_detail"
-            android:parentActivityName=".propertylist.PropertyListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".propertylist.PropertyListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.openclassrooms.realestatemanager.propertylist.PropertyListActivity" />
         </activity>
-        <activity android:name=".newproperty.NewPropertyActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".newproperty.NewPropertyActivity" />
 
         <provider
             android:name=".provider.RealEstateContentProvider"
             android:authorities="${applicationId}.provider"
-            android:exported="true"/>
+            android:exported="true" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

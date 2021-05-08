@@ -1,9 +1,11 @@
 package com.openclassrooms.realestatemanager.model
 
+import android.content.ContentValues
 import android.net.Uri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.openclassrooms.realestatemanager.room.Converters
 
 @Entity(tableName = "property_items")
 data class Property(
@@ -23,8 +25,9 @@ data class Property(
         @ColumnInfo(name = "property_poi") var pointOfInterest: MutableList<String>?,
         @ColumnInfo(name = "property_sold") var sold: Boolean,
         @ColumnInfo(name = "property_sold_date") var soldDate: String?,
-        @ColumnInfo(name = "property_arrival_date") var arrivalDate: String,
+        @ColumnInfo(name = "property_arrival_date") var arrivalDate: String?,
         @ColumnInfo(name = "property_agent") var agent: String,
         @ColumnInfo(name = "property_Lat") var propertyLat: Double,
         @ColumnInfo(name = "property_Long") var propertyLong: Double
 )
+

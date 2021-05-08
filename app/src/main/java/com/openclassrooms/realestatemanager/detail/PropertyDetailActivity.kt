@@ -16,6 +16,7 @@ class PropertyDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_property_detail)
+        configureActionBar()
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
@@ -40,5 +41,16 @@ class PropertyDetailActivity : AppCompatActivity() {
                     .add(R.id.item_detail_container, fragment)
                     .commit()
         }
+    }
+
+    private fun configureActionBar(){
+        val actionbar = supportActionBar
+        //set back button
+        actionbar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

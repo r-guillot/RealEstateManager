@@ -11,4 +11,5 @@
     <color name="lightGrey">#C0C0C0</color>
     <color name="red">#CB2020</color>
     <color name="lightBlue">#CEE7FF</color>
+    <color name="transparent">#00ff0000</color>
 </resources>

@@ -60,6 +60,8 @@
     <string name="delete_photo">Delete Photos</string>
     <string name="delete_video">Delete Videos</string>
     <string name="agent">Real Estate Agent</string>
+    <string name="sold_date">Sold date</string>
+    <string name="creation_date">Arrival date</string>
 
     //Loaning
     <string name="amount">Amount of your loan</string>
